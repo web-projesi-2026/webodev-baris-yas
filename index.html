@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Velora Suit Hotel — Nevşehir'in kalbinde lüks ve konforun buluştuğu butik otel. Modern daireler, özel giriş ve ücretsiz Wi-Fi.">
+  <meta name="keywords" content="velora suit hotel, nevşehir otel, butik otel, kapadokya otel, suite hotel nevsehir">
+  <meta name="author" content="Velora Suit Hotel">
+  <meta property="og:title" content="Velora Suit Hotel — Nevşehir">
+  <meta property="og:description" content="Luxury boutique hotel experience in the heart of Nevşehir.">
+  <meta property="og:type" content="website">
+  <meta name="theme-color" content="#0d0c0b">
+  <title>Velora Suit Hotel — Nevşehir</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+<!-- ── NAVBAR ── -->
+<nav class="navbar" role="navigation">
+  <a href="index.html" class="navbar__brand">VELORA <span>SUIT</span> HOTEL</a>
+  <ul class="navbar__nav">
+    <li><a href="index.html" data-tr="Ana Sayfa" data-en="Home">Ana Sayfa</a></li>
+    <li><a href="pages/rooms.html" data-tr="Odalar" data-en="Rooms">Odalar</a></li>
+    <li><a href="pages/amenities.html" data-tr="Olanaklar" data-en="Amenities">Olanaklar</a></li>
+    <li><a href="pages/contact.html" data-tr="İletişim" data-en="Contact">İletişim</a></li>
+  </ul>
+  <button class="lang-btn" onclick="toggleLang()" aria-label="Change language">EN</button>
+  <button class="hamburger" aria-label="Toggle menu" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- Mobile nav -->
+<ul class="mobile-nav" role="list">
+  <li><a href="index.html" data-tr="Ana Sayfa" data-en="Home">Ana Sayfa</a></li>
+  <li><a href="pages/rooms.html" data-tr="Odalar" data-en="Rooms">Odalar</a></li>
+  <li><a href="pages/amenities.html" data-tr="Olanaklar" data-en="Amenities">Olanaklar</a></li>
+  <li><a href="pages/contact.html" data-tr="İletişim" data-en="Contact">İletişim</a></li>
+</ul>
+
+<!-- ── HERO — bg: Velora logolu yatak odası (7.jpg) ── -->
+<section class="hero">
+  <div class="hero__bg" style="background-image: url('assets/img/hero-room.jpg');" role="img" aria-label="Velora Suite Hotel bedroom"></div>
+  <div class="hero__overlay"></div>
+  <div class="hero__content">
+    <p class="hero__eyebrow" data-tr="Nevşehir, Türkiye" data-en="Nevşehir, Turkey">Nevşehir, Türkiye</p>
+    <h1 class="hero__title" data-tr-html="Lüksü <em>Hisset</em>,<br>Konforu Yaşa" data-en-html="Feel the <em>Luxury</em>,<br>Live the Comfort">Lüksü <em>Hisset</em>,<br>Konforu Yaşa</h1>
+    <p class="hero__sub" data-tr="15 Temmuz Mah.'nde konumlanan butik otelimizde modern daire konforu ve sıcak Türk misafirperverliğini bir arada yaşayın." data-en="Experience modern apartment comfort and warm Turkish hospitality at our boutique hotel in the 15 Temmuz neighborhood.">15 Temmuz Mah.'nde konumlanan butik otelimizde modern daire konforu ve sıcak Türk misafirperverliğini bir arada yaşayın.</p>
+    <div class="hero__actions">
+      <a href="pages/rooms.html" class="btn btn-primary" data-tr="Odaları Keşfet" data-en="Explore Rooms">Odaları Keşfet</a>
+      <a href="pages/contact.html" class="btn btn-outline" data-tr="Rezervasyon" data-en="Book Now">Rezervasyon</a>
+    </div>
+  </div>
+</section>
+
+<!-- ── INFO STRIP ── -->
+<div class="info-strip">
+  <div class="info-strip__inner">
+    <div class="info-strip__item">
+      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M8.288 15.038a5.25 5.25 0 017.424 0M5.106 11.856c3.807-3.808 9.98-3.808 13.788 0M1.924 8.674c5.565-5.565 14.587-5.565 20.152 0M12.53 18.22l-.53.53-.53-.53a.75.75 0 011.06 0z"/></svg>
+      <span data-tr="Ücretsiz Wi-Fi" data-en="Free Wi-Fi">Ücretsiz Wi-Fi</span>
+    </div>
+    <div class="info-strip__item">
+      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12l8.954-8.955a1.126 1.126 0 011.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"/></svg>
+      <span data-tr="60 m² Daire" data-en="60 m² Suite">60 m² Daire</span>
+    </div>
+    <div class="info-strip__item">
+      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+      <span data-tr="Giriş 13:00 / Çıkış 12:00" data-en="Check-in 13:00 / Check-out 12:00">Giriş 13:00 / Çıkış 12:00</span>
+    </div>
+    <div class="info-strip__item">
+      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z"/></svg>
+      <span data-tr="Özel Giriş" data-en="Private Entrance">Özel Giriş</span>
+    </div>
+  </div>
+</div>
+
+<!-- ── ABOUT — img: Oturma odası (1.jpg / living-room.jpg) ── -->
+<section class="section">
+  <div class="container">
+    <div class="about-grid">
+      <div class="about-img reveal">
+        <img src="assets/img/living-room.jpg" alt="Velora Suit Hotel salon ve oturma alanı" style="height:520px;">
+        <div class="about-img__badge">
+          <strong>60</strong>
+          <span data-tr="m² Alan" data-en="m² Space">m² Alan</span>
+        </div>
+      </div>
+      <div class="reveal">
+        <p class="section-label" data-tr="Hakkımızda" data-en="About Us">Hakkımızda</p>
+        <h2 data-tr-html="Butik Otel<br><em>Deneyimi</em>" data-en-html="Boutique Hotel<br><em>Experience</em>">Butik Otel<br><em>Deneyimi</em></h2>
+        <div class="gold-divider"></div>
+        <p style="color:var(--clr-muted);font-size:.95rem;margin-bottom:1.5rem;" data-tr="Nevşehir'in merkezinde, 15 Temmuz Mahallesi'nde yer alan Velora Suit Hotel; modern tasarımı ve sıcak atmosferiyle unutulmaz bir konaklama deneyimi sunar." data-en="Located in central Nevşehir's 15 Temmuz neighborhood, Velora Suit Hotel offers an unforgettable stay with its modern design and warm atmosphere.">Nevşehir'in merkezinde, 15 Temmuz Mahallesi'nde yer alan Velora Suit Hotel; modern tasarımı ve sıcak atmosferiyle unutulmaz bir konaklama deneyimi sunar.</p>
+        <p style="color:var(--clr-muted);font-size:.95rem;margin-bottom:1.8rem;" data-tr="Stüdyo tipindeki dairelerimiz; tam donanımlı mutfak, özel banyo ve geniş oturma alanıyla kendinizi evinizde hissettiren bir konfor sağlar." data-en="Our studio-type suites provide a home-away-from-home feeling with a fully equipped kitchen, private bathroom, and spacious living area.">Stüdyo tipindeki dairelerimiz; tam donanımlı mutfak, özel banyo ve geniş oturma alanıyla kendinizi evinizde hissettiren bir konfor sağlar.</p>
+        <ul class="features-list">
+          <li data-tr="Ücretsiz Wi-Fi" data-en="Free Wi-Fi">Ücretsiz Wi-Fi</li>
+          <li data-tr="Tam Donanımlı Mutfak" data-en="Fully Equipped Kitchen">Tam Donanımlı Mutfak</li>
+          <li data-tr="Özel Banyo" data-en="Private Bathroom">Özel Banyo</li>
+          <li data-tr="LED Aydınlatmalı Tavan" data-en="LED Lit Ceiling">LED Aydınlatmalı Tavan</li>
+          <li data-tr="Smart TV" data-en="Smart TV">Smart TV</li>
+          <li data-tr="Çamaşır Makinesi" data-en="Washing Machine">Çamaşır Makinesi</li>
+          <li data-tr="Isıtma Sistemi" data-en="Heating System">Isıtma Sistemi</li>
+          <li data-tr="Özel Giriş" data-en="Private Entrance">Özel Giriş</li>
+        </ul>
+        <br>
+        <a href="pages/amenities.html" class="btn btn-outline" data-tr="Tüm Olanaklar" data-en="All Amenities">Tüm Olanaklar</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── ROOMS PREVIEW ── -->
+<section class="section section--alt">
+  <div class="container">
+    <div class="section-head reveal">
+      <p class="section-label" data-tr="Odalarımız" data-en="Our Rooms">Odalarımız</p>
+      <h2 data-tr-html="Modern <em>Daireler</em>" data-en-html="Modern <em>Suites</em>">Modern <em>Daireler</em></h2>
+      <p data-tr="Geniş ve konforlu suite dairelerimiz, uzun ya da kısa konaklamalar için tüm ihtiyaçlarınızı karşılar." data-en="Our spacious and comfortable suites meet all your needs for both short and extended stays.">Geniş ve konforlu suite dairelerimiz, uzun ya da kısa konaklamalar için tüm ihtiyaçlarınızı karşılar.</p>
+    </div>
+    <div class="rooms-grid">
+
+      <!-- Velora logolu yatak odası (7.jpg) → Queen Suite -->
+      <div class="room-card reveal">
+        <div class="room-card__img img-trigger">
+          <img src="assets/img/hero-room.jpg" alt="Velora Queen Suite yatak odası" style="object-position: center top;">
+        </div>
+        <div class="room-card__body">
+          <p class="room-card__tag" data-tr="Suite Oda" data-en="Suite Room">Suite Oda</p>
+          <h3 class="room-card__title" data-tr="Queen Suite" data-en="Queen Suite">Queen Suite</h3>
+          <p class="room-card__desc" data-tr="Velora markalı nevresim ve özel dekorasyonuyla lüks queen yatak odası. LED asma tavan ve brand kimliğiyle donatılmış premium oda." data-en="Luxury queen bedroom with Velora-branded linen and private decor. Premium suite featuring LED ceiling lighting and brand identity.">Velora markalı nevresim ve özel dekorasyonuyla lüks queen yatak odası. LED asma tavan ve brand kimliğiyle donatılmış premium oda.</p>
+          <div class="room-card__meta">
+            <span data-tr="🛏 1 Queen Yatak" data-en="🛏 1 Queen Bed">🛏 1 Queen Yatak</span>
+            <span data-tr="🚿 Özel Banyo" data-en="🚿 Private Bath">🚿 Özel Banyo</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- İki tek yataklı oda (5.jpg) → Twin Oda -->
+      <div class="room-card reveal">
+        <div class="room-card__img img-trigger">
+          <img src="assets/img/twin-room.jpg" alt="İki tek yataklı twin oda">
+        </div>
+        <div class="room-card__body">
+          <p class="room-card__tag" data-tr="Standart Oda" data-en="Standard Room">Standart Oda</p>
+          <h3 class="room-card__title" data-tr="Twin Oda" data-en="Twin Room">Twin Oda</h3>
+          <p class="room-card__desc" data-tr="İki ayrı tek yatakla arkadaş veya aile grupları için ideal. LED asma tavan, gardırop ve rahat atmosfer." data-en="Ideal for friends or families with two separate single beds. Features LED ceiling, wardrobe, and a comfortable atmosphere.">İki ayrı tek yatakla arkadaş veya aile grupları için ideal. LED asma tavan, gardırop ve rahat atmosfer.</p>
+          <div class="room-card__meta">
+            <span data-tr="🛏 2 Tek Yatak" data-en="🛏 2 Single Beds">🛏 2 Tek Yatak</span>
+            <span data-tr="🚿 Özel Banyo" data-en="🚿 Private Bath">🚿 Özel Banyo</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Büyük çift kişilik yatak (6.jpg) → Deluxe Double -->
+      <div class="room-card reveal">
+        <div class="room-card__img img-trigger">
+          <img src="assets/img/double-room.jpg" alt="Deluxe çift kişilik yatak odası">
+        </div>
+        <div class="room-card__body">
+          <p class="room-card__tag" data-tr="Deluxe Oda" data-en="Deluxe Room">Deluxe Oda</p>
+          <h3 class="room-card__title" data-tr="Deluxe Double" data-en="Deluxe Double">Deluxe Double</h3>
+          <p class="room-card__desc" data-tr="Geniş çift kişilik yatak ve LED asma tavanıyla romantik ve uzun konaklamalar için tercih edilen lüks oda." data-en="Luxury room preferred for romantic getaways and extended stays, featuring a spacious double bed and LED ceiling.">Geniş çift kişilik yatak ve LED asma tavanıyla romantik ve uzun konaklamalar için tercih edilen lüks oda.</p>
+          <div class="room-card__meta">
+            <span data-tr="🛏 1 Çift Yatak" data-en="🛏 1 Double Bed">🛏 1 Çift Yatak</span>
+            <span data-tr="🚿 Özel Banyo" data-en="🚿 Private Bath">🚿 Özel Banyo</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div style="text-align:center;margin-top:3rem;">
+      <a href="pages/rooms.html" class="btn btn-primary" data-tr="Tüm Oda Detayları" data-en="All Room Details">Tüm Oda Detayları</a>
+    </div>
+  </div>
+</section>
+
+<!-- ── GALLERY ── -->
+<section class="section">
+  <div class="container">
+    <div class="section-head reveal">
+      <p class="section-label" data-tr="Galeri" data-en="Gallery">Galeri</p>
+      <h2 data-tr-html="Otelimizden <em>Kareler</em>" data-en-html="A Glimpse of <em>Our Hotel</em>">Otelimizden <em>Kareler</em></h2>
+    </div>
+    <div class="gallery-grid">
+      <!-- Velora yatak odası (7.jpg) - büyük sol kart -->
+      <div class="gallery-item reveal img-trigger">
+        <img src="assets/img/hero-room.jpg" alt="Velora Queen Suite" style="object-position:center top;">
+      </div>
+      <!-- Mutfak (3.jpg) -->
+      <div class="gallery-item reveal img-trigger">
+        <img src="assets/img/kitchen.jpg" alt="Mutfak" style="object-position:center center;">
+      </div>
+      <!-- Banyo (2.jpg) -->
+      <div class="gallery-item reveal img-trigger">
+        <img src="assets/img/bathroom.jpg" alt="Banyo">
+      </div>
+      <!-- Salon (1.jpg) -->
+      <div class="gallery-item reveal img-trigger">
+        <img src="assets/img/living-room.jpg" alt="Oturma odası" style="object-position:center center;">
+      </div>
+      <!-- Twin oda (5.jpg) -->
+      <div class="gallery-item reveal img-trigger">
+        <img src="assets/img/twin-room.jpg" alt="Twin oda">
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── CTA ── -->
+<section class="section section--alt" style="text-align:center;">
+  <div class="container reveal">
+    <p class="section-label" data-tr="Rezervasyon" data-en="Reservation">Rezervasyon</p>
+    <h2 data-tr-html="Konaklamanızı<br><em>Planlayın</em>" data-en-html="Plan Your<br><em>Stay</em>">Konaklamanızı<br><em>Planlayın</em></h2>
+    <div class="gold-divider" style="margin:1.2rem auto 1.8rem;"></div>
+    <p style="color:var(--clr-muted);max-width:400px;margin:0 auto 2rem;" data-tr="Nevşehir merkezinde, ulaşımı kolay konumumuzda sizi bekliyoruz. Rezervasyon ve bilgi için iletişime geçin." data-en="We look forward to welcoming you at our centrally located property in Nevşehir. Contact us for bookings and inquiries.">Nevşehir merkezinde, ulaşımı kolay konumumuzda sizi bekliyoruz. Rezervasyon ve bilgi için iletişime geçin.</p>
+    <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;">
+      <a href="pages/contact.html" class="btn btn-primary" data-tr="İletişime Geçin" data-en="Get in Touch">İletişime Geçin</a>
+      <a href="https://maps.app.goo.gl/EUJVZFMvcdo251zZA" target="_blank" rel="noopener" class="btn btn-outline" data-tr="Haritada Gör" data-en="View on Map">Haritada Gör</a>
+    </div>
+  </div>
+</section>
+
+<!-- ── FOOTER ── -->
+<footer class="footer">
+  <div class="footer__inner">
+    <div class="footer__brand">VELORA <span>SUIT</span> HOTEL</div>
+    <p class="footer__copy" data-tr="© 2025 Velora Suit Hotel. Tüm hakları saklıdır." data-en="© 2025 Velora Suit Hotel. All rights reserved.">© 2025 Velora Suit Hotel. Tüm hakları saklıdır.</p>
+    <ul class="footer__links">
+      <li><a href="index.html" data-tr="Ana Sayfa" data-en="Home">Ana Sayfa</a></li>
+      <li><a href="pages/rooms.html" data-tr="Odalar" data-en="Rooms">Odalar</a></li>
+      <li><a href="pages/amenities.html" data-tr="Olanaklar" data-en="Amenities">Olanaklar</a></li>
+      <li><a href="pages/contact.html" data-tr="İletişim" data-en="Contact">İletişim</a></li>
+    </ul>
+  </div>
+</footer>
+
+<script src="assets/js/main.js"></script>
+</body>
+</html>
