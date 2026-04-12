@@ -64,7 +64,7 @@ velora/
 Herhangi bir kurulum gerektirmez. Projeyi klonlayıp `index.html` dosyasını tarayıcıda açman yeterli.
 
 ```bash
-git clone https://github.com/kullanici-adin/velora-suit-hotel.git
+git clone https://github.com/web-projesi-2026/13nisan-webodev-baris-yas.git
 cd velora-suit-hotel
 # index.html dosyasını tarayıcıda aç
 ```
