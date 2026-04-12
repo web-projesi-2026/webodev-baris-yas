@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Velora Suit Hotel iletişim ve konum — 15 Temmuz Mah. Şifa Cad. No:9, Nevşehir, Türkiye 50100.">
+  <meta name="keywords" content="velora suit hotel iletişim, nevşehir otel adres, velora konum, contact">
+  <meta name="author" content="Velora Suit Hotel">
+  <meta name="theme-color" content="#0d0c0b">
+  <title>İletişim — Velora Suit Hotel</title>
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <style>
+    .contact-form { display:flex; flex-direction:column; gap:1.2rem; margin-top:2rem; }
+    .form-group { display:flex; flex-direction:column; gap:.4rem; }
+    .form-group label { font-size:.7rem; letter-spacing:.15em; text-transform:uppercase; color:var(--clr-gold); }
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+      background:var(--clr-surface); border:1px solid var(--clr-border); border-radius:var(--radius);
+      padding:.85rem 1rem; color:var(--clr-cream); font-family:var(--ff-body); font-size:.9rem;
+      font-weight:300; outline:none; transition:border-color var(--transition); width:100%;
+      -webkit-appearance:none;
+    }
+    .form-group input::placeholder, .form-group textarea::placeholder { color:var(--clr-muted); }
+    .form-group input:focus, .form-group textarea:focus, .form-group select:focus { border-color:var(--clr-gold); }
+    .form-group textarea { resize:vertical; min-height:130px; }
+    .form-group select option { background:var(--clr-surface); color:var(--clr-cream); }
+    .form-row { display:grid; grid-template-columns:1fr 1fr; gap:1rem; }
+    .form-success {
+      display:none; background:rgba(197,165,90,.1); border:1px solid var(--clr-gold);
+      border-radius:var(--radius); padding:1.2rem 1.5rem; color:var(--clr-gold);
+      font-size:.9rem; text-align:center; margin-top:1rem;
+    }
+    @media (max-width:540px) { .form-row { grid-template-columns:1fr; } }
+  </style>
+</head>
+<body>
+
+<nav class="navbar" role="navigation">
+  <a href="../index.html" class="navbar__brand">VELORA <span>SUIT</span> HOTEL</a>
+  <ul class="navbar__nav">
+    <li><a href="../index.html" data-tr="Ana Sayfa" data-en="Home">Ana Sayfa</a></li>
+    <li><a href="rooms.html" data-tr="Odalar" data-en="Rooms">Odalar</a></li>
+    <li><a href="amenities.html" data-tr="Olanaklar" data-en="Amenities">Olanaklar</a></li>
+    <li><a href="contact.html" class="active" data-tr="İletişim" data-en="Contact">İletişim</a></li>
+  </ul>
+  <button class="lang-btn" onclick="toggleLang()">EN</button>
+  <button class="hamburger" aria-label="Toggle menu" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<ul class="mobile-nav" role="list">
+  <li><a href="../index.html" data-tr="Ana Sayfa" data-en="Home">Ana Sayfa</a></li>
+  <li><a href="rooms.html" data-tr="Odalar" data-en="Rooms">Odalar</a></li>
+  <li><a href="amenities.html" data-tr="Olanaklar" data-en="Amenities">Olanaklar</a></li>
+  <li><a href="contact.html" data-tr="İletişim" data-en="Contact">İletişim</a></li>
+</ul>
+
+<div class="page-hero">
+  <p class="section-label" data-tr="Bize Ulaşın" data-en="Get In Touch">Bize Ulaşın</p>
+  <h1 data-tr-html="İletişim & <em>Konum</em>" data-en-html="Contact & <em>Location</em>">İletişim & <em>Konum</em></h1>
+  <p data-tr="Rezervasyon ve sorularınız için bizimle iletişime geçin." data-en="Contact us for reservations and inquiries.">Rezervasyon ve sorularınız için bizimle iletişime geçin.</p>
+  <p class="breadcrumb"><a href="../index.html" data-tr="Ana Sayfa" data-en="Home">Ana Sayfa</a> <span>/</span> <span data-tr="İletişim" data-en="Contact">İletişim</span></p>
+</div>
+
+<section class="section">
+  <div class="container">
+    <div class="contact-grid">
+
+      <!-- Sol: Bilgi + Form -->
+      <div>
+        <p class="section-label" data-tr="Bilgilerimiz" data-en="Our Details">Bilgilerimiz</p>
+        <h2 class="reveal" data-tr-html="Sizi Ağırlamaktan<br><em>Mutluluk Duyarız</em>" data-en-html="We're Delighted to<br><em>Welcome You</em>">Sizi Ağırlamaktan<br><em>Mutluluk Duyarız</em></h2>
+        <div class="gold-divider"></div>
+
+        <div class="contact-detail reveal">
+          <div class="contact-detail__item">
+            <div class="contact-detail__icon">📍</div>
+            <div class="contact-detail__text">
+              <strong data-tr="Adres" data-en="Address">Adres</strong>
+              <span data-tr="15 Temmuz Mah. Şifa Cad. No:9, Nevşehir, Türkiye 50100" data-en="15 Temmuz Mah. Şifa Cad. No:9, Nevşehir, Turkey 50100">15 Temmuz Mah. Şifa Cad. No:9, Nevşehir, Türkiye 50100</span>
+            </div>
+          </div>
+          <div class="contact-detail__item">
+            <div class="contact-detail__icon">📞</div>
+            <div class="contact-detail__text">
+              <!-- ⚠️ EL İLE DEĞİŞTİR: Telefon numarasını buraya yaz -->
+              <strong data-tr="Telefon" data-en="Phone">Telefon</strong>
+              <span>+90 XXX XXX XX XX</span>
+            </div>
+          </div>
+          <div class="contact-detail__item">
+            <div class="contact-detail__icon">✉️</div>
+            <div class="contact-detail__text">
+              <!-- ⚠️ EL İLE DEĞİŞTİR: E-posta adresini buraya yaz -->
+              <strong data-tr="E-posta" data-en="Email">E-posta</strong>
+              <span><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="6b02050d042b1d0e0704190a181e021f03041f0e0745080406">[email&#160;protected]</a></span>
+            </div>
+          </div>
+          <div class="contact-detail__item">
+            <div class="contact-detail__icon">🕐</div>
+            <div class="contact-detail__text">
+              <strong data-tr="Giriş / Çıkış" data-en="Check-in / Check-out">Giriş / Çıkış</strong>
+              <span data-tr="Check-in: 13:00 — Check-out: 12:00" data-en="Check-in: 13:00 — Check-out: 12:00">Check-in: 13:00 — Check-out: 12:00</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Form -->
+        <div class="reveal">
+          <p class="section-label" style="margin-top:2rem;" data-tr="Rezervasyon Formu" data-en="Reservation Form">Rezervasyon Formu</p>
+          <form class="contact-form" id="reservationForm" novalidate>
+            <div class="form-row">
+              <div class="form-group">
+                <label data-tr="Ad Soyad" data-en="Full Name">Ad Soyad</label>
+                <input type="text" name="name" data-placeholder-tr="Adınızı girin" data-placeholder-en="Enter your name" placeholder="Adınızı girin" required>
+              </div>
+              <div class="form-group">
+                <label data-tr="Telefon" data-en="Phone">Telefon</label>
+                <input type="tel" name="phone" placeholder="+90 5XX XXX XX XX">
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label data-tr="Giriş Tarihi" data-en="Check-in Date">Giriş Tarihi</label>
+                <input type="date" name="checkin">
+              </div>
+              <div class="form-group">
+                <label data-tr="Çıkış Tarihi" data-en="Check-out Date">Çıkış Tarihi</label>
+                <input type="date" name="checkout">
+              </div>
+            </div>
+            <div class="form-group">
+              <label data-tr="Oda Tipi" data-en="Room Type">Oda Tipi</label>
+              <select name="room">
+                <option value="" data-tr="Oda seçin" data-en="Select a room">Oda seçin</option>
+                <option value="queen" data-tr="Queen Suite" data-en="Queen Suite">Queen Suite</option>
+                <option value="twin" data-tr="Twin Oda" data-en="Twin Room">Twin Oda</option>
+                <option value="deluxe" data-tr="Deluxe Double" data-en="Deluxe Double">Deluxe Double</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label data-tr="Mesaj / Özel İstek" data-en="Message / Special Request">Mesaj / Özel İstek</label>
+              <textarea name="message" data-placeholder-tr="Eklemek istediğiniz bilgileri buraya yazabilirsiniz..." data-placeholder-en="Write any additional requests or information here..." placeholder="Eklemek istediğiniz bilgileri buraya yazabilirsiniz..."></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary" data-tr="Talep Gönder" data-en="Send Request">Talep Gönder</button>
+            <div class="form-success" id="formSuccess" data-tr="✓ Talebiniz alındı. En kısa sürede sizinle iletişime geçeceğiz." data-en="✓ Your request has been received. We will get back to you shortly.">✓ Talebiniz alındı. En kısa sürede sizinle iletişime geçeceğiz.</div>
+          </form>
+        </div>
+      </div>
+
+      <!-- Sağ: Harita -->
+      <div class="reveal">
+        <p class="section-label" data-tr="Haritada Konum" data-en="Our Location">Haritada Konum</p>
+        <div class="map-frame">
+          <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3103.4862290307683!2d34.72957661132071!3d38.65677186074885!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x152a6f6e037b13b9%3A0x5b45a0d776ed72ce!2sVelora%20Suit%20Hotel!5e1!3m2!1str!2str!4v1776027245063!5m2!1str!2str" 
+          width="600" 
+          height="450" 
+          style="border:0;" 
+          allowfullscreen="" 
+          loading="lazy" 
+          referrerpolicy="no-referrer-when-downgrade">
+          </iframe>
+        </div>
+
+        <div style="margin-top:1.5rem;display:flex;gap:.8rem;flex-wrap:wrap;">
+          <a href="https://maps.app.goo.gl/EUJVZFMvcdo251zZA" target="_blank" rel="noopener noreferrer" class="btn btn-primary" style="flex:1;justify-content:center;" data-tr="Google Maps'te Aç ↗" data-en="Open in Google Maps ↗">Google Maps'te Aç ↗</a>
+          <a href="https://maps.app.goo.gl/EUJVZFMvcdo251zZA" target="_blank" rel="noopener noreferrer" class="btn btn-outline" style="flex:1;justify-content:center;" data-tr="Yol Tarifi Al" data-en="Get Directions">Yol Tarifi Al</a>
+        </div>
+
+        <div style="margin-top:1.5rem;background:var(--clr-surface);border:1px solid var(--clr-border);border-radius:var(--radius);padding:1.5rem;">
+          <p style="font-size:.7rem;letter-spacing:.15em;text-transform:uppercase;color:var(--clr-gold);margin-bottom:.5rem;" data-tr="Tam Adres" data-en="Full Address">Tam Adres</p>
+          <p style="color:var(--clr-cream);font-size:.95rem;line-height:1.6;" data-tr="15 Temmuz Mahallesi, Şifa Caddesi No:9 — Nevşehir Merkez, Nevşehir — Türkiye 50100" data-en="15 Temmuz Neighborhood, Şifa Street No:9 — Nevşehir Center, Nevşehir — Turkey 50100">15 Temmuz Mahallesi, Şifa Caddesi No:9 — Nevşehir Merkez, Nevşehir — Türkiye 50100</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="footer__inner">
+    <div class="footer__brand">VELORA <span>SUIT</span> HOTEL</div>
+    <p class="footer__copy" data-tr="© 2025 Velora Suit Hotel. Tüm hakları saklıdır." data-en="© 2025 Velora Suit Hotel. All rights reserved.">© 2025 Velora Suit Hotel. Tüm hakları saklıdır.</p>
+    <ul class="footer__links">
+      <li><a href="../index.html" data-tr="Ana Sayfa" data-en="Home">Ana Sayfa</a></li>
+      <li><a href="rooms.html" data-tr="Odalar" data-en="Rooms">Odalar</a></li>
+      <li><a href="amenities.html" data-tr="Olanaklar" data-en="Amenities">Olanaklar</a></li>
+      <li><a href="contact.html" data-tr="İletişim" data-en="Contact">İletişim</a></li>
+    </ul>
+  </div>
+</footer>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="../assets/js/main.js"></script>
+<script>
+  document.getElementById('reservationForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const success = document.getElementById('formSuccess');
+    // Apply current lang to success message
+    success.textContent = success.getAttribute('
