@@ -186,3 +186,97 @@ document.addEventListener('DOMContentLoaded', () => setLang(currentLang));
       ? 'rgba(13,12,11,0.98)' : 'rgba(13,12,11,0.92)';
   }, { passive: true });
 })();
+
+// ── 3. Yukarı Çık Butonu ─────────────────────
+// Sayfa aşağı kaydırıldığında sağ altta beliren,
+// tıklayınca sayfanın en üstüne smooth scroll yapan buton.
+(function () {
+  // Butonu DOM'a ekle
+  const btn = document.createElement('button');
+  btn.className = 'scroll-top-btn';
+  btn.setAttribute('aria-label', 'Yukarı çık');
+  btn.innerHTML = '↑';
+  document.body.appendChild(btn);
+
+  // 300px aşağı inilince butonu göster
+  window.addEventListener('scroll', () => {
+    btn.classList.toggle('visible', window.scrollY > 300);
+  }, { passive: true });
+
+  // Tıklanınca en üste git
+  btn.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+})();
+
+// ── 4. Sayaç Animasyonu ──────────────────────
+// .counter-num class'ına sahip elementlerin
+// data-target değerine kadar sayı animasyonu yapar.
+// IntersectionObserver ile ekrana girince tetiklenir.
+(function () {
+  const counters = document.querySelectorAll('.counter-num');
+  if (!counters.length) return;
+
+  function animateCounter(el) {
+    const target = +el.getAttribute('data-target');
+    const duration = 1800; // ms
+    const step = 16;       // ~60fps
+    const increment = target / (duration / step);
+    let current = 0;
+
+    const timer = setInterval(() => {
+      current += increment;
+      if (current >= target) {
+        el.textContent = target;
+        clearInterval(timer);
+      } else {
+        el.textContent = Math.floor(current);
+      }
+    }, step);
+  }
+
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        animateCounter(entry.target);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.5 });
+
+  counters.forEach(el => observer.observe(el));
+})();
+
+// ── Accordion (SSS) ──────────────────────────
+// Olanaklar sayfasındaki SSS bölümünde
+// soruya tıklayınca cevap açılır/kapanır.
+// Aynı anda sadece bir cevap açık kalır.
+(function () {
+  const triggers = document.querySelectorAll('.accordion__trigger');
+  if (!triggers.length) return;
+
+  triggers.forEach(trigger => {
+    trigger.addEventListener('click', () => {
+      const item    = trigger.closest('.accordion__item');
+      const body    = item.querySelector('.accordion__body');
+      const icon    = trigger.querySelector('.accordion__icon');
+      const isOpen  = trigger.getAttribute('aria-expanded') === 'true';
+
+      // Tümünü kapat
+      document.querySelectorAll('.accordion__item').forEach(i => {
+        i.querySelector('.accordion__trigger').setAttribute('aria-expanded', 'false');
+        i.querySelector('.accordion__body').style.maxHeight = null;
+        i.querySelector('.accordion__icon').textContent = '+';
+        i.classList.remove('open');
+      });
+
+      // Tıklanan kapalıysa aç
+      if (!isOpen) {
+        trigger.setAttribute('aria-expanded', 'true');
+        body.style.maxHeight = body.scrollHeight + 'px';
+        icon.textContent = '−';
+        item.classList.add('open');
+      }
+    });
+  });
+})();
