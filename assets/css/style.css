@@ -1021,3 +1021,196 @@ h1, h2, h3, h4 {
   .hero__actions { flex-direction: column; }
   .btn { width: 100%; justify-content: center; }
 }
+
+/* ── Yukarı Çık Butonu ── */
+.scroll-top-btn {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  z-index: 999;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--clr-gold);
+  color: #0d0c0b;
+  border: none;
+  font-size: 1.3rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 20px rgba(197,165,90,0.4);
+  opacity: 0;
+  transform: translateY(16px);
+  pointer-events: none;
+  transition: opacity 0.3s ease, transform 0.3s ease, background 0.2s ease;
+}
+
+.scroll-top-btn.visible {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.scroll-top-btn:hover {
+  background: var(--clr-gold-lt);
+  transform: translateY(-3px);
+}
+
+@media (max-width: 768px) {
+  .scroll-top-btn {
+    bottom: 1.2rem;
+    right: 1.2rem;
+    width: 42px;
+    height: 42px;
+    font-size: 1.1rem;
+  }
+}
+
+/* ── Sayaç / İstatistik Bölümü ── */
+.stats-section {
+  background: var(--clr-gold);
+  padding: 4rem 2.5rem;
+}
+
+.stats-grid {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2rem;
+  text-align: center;
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.stat-item__number {
+  font-family: var(--ff-display);
+  font-size: clamp(2.8rem, 5vw, 4rem);
+  font-weight: 300;
+  color: #0d0c0b;
+  line-height: 1;
+  display: flex;
+  align-items: baseline;
+  gap: 0.1em;
+}
+
+.stat-item__suffix {
+  font-size: 0.55em;
+  font-family: var(--ff-body);
+  font-weight: 600;
+}
+
+.stat-item__label {
+  font-family: var(--ff-body);
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(13,12,11,0.65);
+}
+
+@media (max-width: 768px) {
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem 1rem;
+  }
+  .stats-section { padding: 3rem 1.2rem; }
+}
+
+@media (max-width: 400px) {
+  .stats-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* ── Accordion ── */
+.accordion {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  border: 1px solid var(--clr-border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.accordion__item {
+  border-bottom: 1px solid var(--clr-border);
+}
+
+.accordion__item:last-child {
+  border-bottom: none;
+}
+
+.accordion__trigger {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.4rem 1.8rem;
+  background: var(--clr-surface);
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  font-family: var(--ff-body);
+  font-size: 0.95rem;
+  font-weight: 400;
+  color: var(--clr-cream);
+  transition: background var(--transition), color var(--transition);
+}
+
+.accordion__trigger:hover {
+  background: rgba(197,165,90,0.06);
+  color: var(--clr-gold);
+}
+
+.accordion__item.open .accordion__trigger {
+  color: var(--clr-gold);
+  background: rgba(197,165,90,0.06);
+}
+
+.accordion__icon {
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  border: 1px solid var(--clr-border);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  font-weight: 300;
+  color: var(--clr-gold);
+  transition: transform var(--transition), background var(--transition);
+  line-height: 1;
+}
+
+.accordion__item.open .accordion__icon {
+  background: var(--clr-gold);
+  color: #0d0c0b;
+  border-color: var(--clr-gold);
+}
+
+.accordion__body {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.38s cubic-bezier(0.4, 0, 0.2, 1);
+  background: var(--clr-bg);
+}
+
+.accordion__body p {
+  padding: 1.2rem 1.8rem 1.6rem;
+  font-size: 0.9rem;
+  color: var(--clr-muted);
+  line-height: 1.75;
+}
+
+@media (max-width: 768px) {
+  .accordion__trigger { padding: 1.2rem 1.2rem; font-size: 0.88rem; }
+  .accordion__body p  { padding: 1rem 1.2rem 1.4rem; }
+}
