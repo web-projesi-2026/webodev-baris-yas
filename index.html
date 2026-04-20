@@ -25,6 +25,7 @@
     <li><a href="pages/contact.html" data-tr="İletişim" data-en="Contact">İletişim</a></li>
   </ul>
   <button class="lang-btn" onclick="toggleLang()" aria-label="Change language">EN</button>
+  <button class="darkmode-btn" aria-label="Temayı değiştir">🌙</button>
   <button class="hamburger" aria-label="Toggle menu" aria-expanded="false">
     <span></span><span></span><span></span>
   </button>
@@ -209,34 +210,53 @@
   </div>
 </section>
 
-<!-- ── GALLERY ── -->
+<!-- ── SLIDER / GALERİ ── -->
+<!-- JavaScript Etkileşimi: Otomatik + manuel geçişli görsel slider -->
 <section class="section">
   <div class="container">
     <div class="section-head reveal">
       <p class="section-label" data-tr="Galeri" data-en="Gallery">Galeri</p>
       <h2 data-tr-html="Otelimizden <em>Kareler</em>" data-en-html="A Glimpse of <em>Our Hotel</em>">Otelimizden <em>Kareler</em></h2>
     </div>
-    <div class="gallery-grid">
-      <!-- Velora yatak odası (7.jpg) - büyük sol kart -->
-      <div class="gallery-item reveal img-trigger">
-        <img src="assets/img/hero-room.jpg" alt="Velora Queen Suite" style="object-position:center top;">
+
+    <div class="slider reveal" tabindex="0" aria-label="Otel galeri slaytı">
+      <div class="slider__track">
+
+        <div class="slide img-trigger">
+          <img src="assets/img/hero-room.jpg" alt="Velora Queen Suite — Marka nevresimli lüks yatak odası">
+          <div class="slide__caption" data-tr="Queen Suite — Velora markalı premium oda" data-en="Queen Suite — Velora branded premium room">Queen Suite — Velora markalı premium oda</div>
+        </div>
+
+        <div class="slide img-trigger">
+          <img src="assets/img/double-room.jpg" alt="Deluxe Double — LED asma tavanlı geniş yatak odası">
+          <div class="slide__caption" data-tr="Deluxe Double — LED asma tavanlı geniş oda" data-en="Deluxe Double — Spacious room with LED ceiling">Deluxe Double — LED asma tavanlı geniş oda</div>
+        </div>
+
+        <div class="slide img-trigger">
+          <img src="assets/img/twin-room.jpg" alt="Twin Oda — İki ayrı tek kişilik yatak">
+          <div class="slide__caption" data-tr="Twin Oda — İki ayrı yatak, geniş alan" data-en="Twin Room — Two separate beds, spacious layout">Twin Oda — İki ayrı yatak, geniş alan</div>
+        </div>
+
+        <div class="slide img-trigger">
+          <img src="assets/img/living-room.jpg" alt="Salon — L tipi kanepe ve Smart TV">
+          <div class="slide__caption" data-tr="Salon — L kanepe ve duvara monte Smart TV" data-en="Living Room — L sofa and wall-mounted Smart TV">Salon — L kanepe ve duvara monte Smart TV</div>
+        </div>
+
+        <div class="slide img-trigger">
+          <img src="assets/img/kitchen.jpg" alt="Mutfak — Beyaz lake dolaplı mermer tezgâh">
+          <div class="slide__caption" data-tr="Mutfak — Tam donanımlı, mermer tezgâhlı" data-en="Kitchen — Fully equipped with marble countertop">Mutfak — Tam donanımlı, mermer tezgâhlı</div>
+        </div>
+
+        <div class="slide img-trigger">
+          <img src="assets/img/bathroom.jpg" alt="Banyo — Cam kabin duş ve mermer fayans">
+          <div class="slide__caption" data-tr="Banyo — Siyah çerçeveli cam kabin duş" data-en="Bathroom — Black-framed glass shower cabin">Banyo — Siyah çerçeveli cam kabin duş</div>
+        </div>
+
       </div>
-      <!-- Mutfak (3.jpg) -->
-      <div class="gallery-item reveal img-trigger">
-        <img src="assets/img/kitchen.jpg" alt="Mutfak" style="object-position:center center;">
-      </div>
-      <!-- Banyo (2.jpg) -->
-      <div class="gallery-item reveal img-trigger">
-        <img src="assets/img/bathroom.jpg" alt="Banyo">
-      </div>
-      <!-- Salon (1.jpg) -->
-      <div class="gallery-item reveal img-trigger">
-        <img src="assets/img/living-room.jpg" alt="Oturma odası" style="object-position:center center;">
-      </div>
-      <!-- Twin oda (5.jpg) -->
-      <div class="gallery-item reveal img-trigger">
-        <img src="assets/img/twin-room.jpg" alt="Twin oda">
-      </div>
+
+      <button class="slider__prev" aria-label="Önceki slayt">&#8249;</button>
+      <button class="slider__next" aria-label="Sonraki slayt">&#8250;</button>
+      <div class="slider__dots" role="tablist" aria-label="Slayt seçimi"></div>
     </div>
   </div>
 </section>

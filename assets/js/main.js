@@ -280,3 +280,111 @@ document.addEventListener('DOMContentLoaded', () => setLang(currentLang));
     });
   });
 })();
+
+// ── Dark / Light Mode ────────────────────────
+// Navbar'daki 🌙/☀️ butonuyla açık/koyu tema arasında geçiş.
+// Seçim localStorage'a kaydedilir.
+(function () {
+  const DARK_KEY = 'velora_dark';
+  const btn = document.querySelector('.darkmode-btn');
+  if (!btn) return;
+
+  function applyTheme(isDark) {
+    document.body.classList.toggle('light-mode', !isDark);
+    btn.textContent = isDark ? '☀️' : '🌙';
+    btn.setAttribute('aria-label', isDark ? 'Açık temaya geç' : 'Koyu temaya geç');
+    localStorage.setItem(DARK_KEY, isDark ? '1' : '0');
+  }
+
+  // Kayıtlı tercihi uygula (varsayılan: koyu)
+  const saved = localStorage.getItem(DARK_KEY);
+  applyTheme(saved === null ? true : saved === '1');
+
+  btn.addEventListener('click', () => {
+    applyTheme(document.body.classList.contains('light-mode'));
+  });
+})();
+
+// ── Image Slider ─────────────────────────────
+// Ana sayfadaki galeri bölümünde oda fotoğrafları
+// arasında otomatik ve manuel geçiş yapan slider.
+(function () {
+  const slider = document.querySelector('.slider');
+  if (!slider) return;
+
+  const slides    = slider.querySelectorAll('.slide');
+  const prevBtn   = slider.querySelector('.slider__prev');
+  const nextBtn   = slider.querySelector('.slider__next');
+  const dotsWrap  = slider.querySelector('.slider__dots');
+  let current     = 0;
+  let autoTimer;
+
+  // Dot'ları oluştur
+  slides.forEach((_, i) => {
+    const dot = document.createElement('button');
+    dot.className = 'slider__dot';
+    dot.setAttribute('aria-label', (i + 1) + '. slayt');
+    dot.addEventListener('click', () => goTo(i));
+    dotsWrap.appendChild(dot);
+  });
+
+  const dots = dotsWrap.querySelectorAll('.slider__dot');
+
+  function goTo(idx) {
+    slides[current].classList.remove('active');
+    dots[current].classList.remove('active');
+    current = (idx + slides.length) % slides.length;
+    slides[current].classList.add('active');
+    dots[current].classList.add('active');
+    resetAuto();
+  }
+
+  function resetAuto() {
+    clearInterval(autoTimer);
+    autoTimer = setInterval(() => goTo(current + 1), 4500);
+  }
+
+  prevBtn.addEventListener('click', () => goTo(current - 1));
+  nextBtn.addEventListener('click', () => goTo(current + 1));
+
+  // Touch swipe
+  let tx = 0;
+  slider.addEventListener('touchstart', e => { tx = e.touches[0].clientX; }, { passive: true });
+  slider.addEventListener('touchend', e => {
+    const dx = e.changedTouches[0].clientX - tx;
+    if (Math.abs(dx) > 50) goTo(dx < 0 ? current + 1 : current - 1);
+  });
+
+  // Keyboard
+  slider.addEventListener('keydown', e => {
+    if (e.key === 'ArrowLeft')  goTo(current - 1);
+    if (e.key === 'ArrowRight') goTo(current + 1);
+  });
+
+  goTo(0);
+})();
+
+// ── Sekme (Tabs) Sistemi ─────────────────────
+// Odalar sayfasında oda tiplerini sekme butonlarıyla
+// gösterir/gizler. Aktif sekme vurgulu görünür.
+(function () {
+  const tabBtns    = document.querySelectorAll('.tab-btn');
+  const tabPanels  = document.querySelectorAll('.tab-panel');
+  if (!tabBtns.length) return;
+
+  function activateTab(idx) {
+    tabBtns.forEach((b, i) => {
+      b.classList.toggle('active', i === idx);
+      b.setAttribute('aria-selected', i === idx);
+    });
+    tabPanels.forEach((p, i) => {
+      p.classList.toggle('active', i === idx);
+    });
+  }
+
+  tabBtns.forEach((btn, i) => {
+    btn.addEventListener('click', () => activateTab(i));
+  });
+
+  activateTab(0);
+})();

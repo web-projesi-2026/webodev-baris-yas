@@ -21,6 +21,7 @@
     <li><a href="contact.html" data-tr="İletişim" data-en="Contact">İletişim</a></li>
   </ul>
   <button class="lang-btn" onclick="toggleLang()">EN</button>
+  <button class="darkmode-btn" aria-label="Temayı değiştir">🌙</button>
   <button class="hamburger" aria-label="Toggle menu" aria-expanded="false">
     <span></span><span></span><span></span>
   </button>
@@ -44,78 +45,109 @@
 <section class="section">
   <div class="container">
 
-    <!-- ── ODA 1: Queen Suite — Velora logolu yatak (7.jpg / hero-room.jpg) ── -->
-    <div class="about-grid reveal" style="margin-bottom:6rem;padding-bottom:6rem;border-bottom:1px solid var(--clr-border);">
-      <div class="about-img img-trigger">
-        <img src="../assets/img/hero-room.jpg" alt="Velora markalı Queen Suite yatak odası" style="height:460px;border-radius:4px;width:100%;object-position:center top;">
+    <!-- ── SEKMELİ ODA İÇERİĞİ ── -->
+    <!-- JavaScript Etkileşimi: Sekme sistemi — oda tipleri sekmelerle gösterilir -->
+    <div class="tabs-wrap">
+      <div class="tab-list" role="tablist">
+        <button class="tab-btn" role="tab" aria-selected="true"
+          data-tr="🛏 Queen Suite" data-en="🛏 Queen Suite">🛏 Queen Suite</button>
+        <button class="tab-btn" role="tab" aria-selected="false"
+          data-tr="🛏 Twin Oda" data-en="🛏 Twin Room">🛏 Twin Oda</button>
+        <button class="tab-btn" role="tab" aria-selected="false"
+          data-tr="🛏 Deluxe Double" data-en="🛏 Deluxe Double">🛏 Deluxe Double</button>
       </div>
-      <div>
-        <p class="section-label" data-tr="Suite Oda" data-en="Suite Room">Suite Oda</p>
-        <h2 data-tr-html="Queen <em>Suite</em>" data-en-html="Queen <em>Suite</em>">Queen <em>Suite</em></h2>
-        <div class="gold-divider"></div>
-        <p style="color:var(--clr-muted);font-size:.95rem;margin-bottom:1.5rem;" data-tr="Velora markasını yansıtan özel nevresim ve yastık takımları, duvarda asılı marka logosu ve LED asma tavan ile premium bir oda deneyimi sunar." data-en="Featuring Velora-branded bedding and pillowcases, a wall-mounted brand logo, and LED recessed ceiling — a truly premium room experience.">Velora markasını yansıtan özel nevresim ve yastık takımları, duvarda asılı marka logosu ve LED asma tavan ile premium bir oda deneyimi sunar.</p>
-        <ul class="features-list">
-          <li data-tr="1 Queen / Çift Kişilik Yatak" data-en="1 Queen / Double Bed">1 Queen / Çift Kişilik Yatak</li>
-          <li data-tr="Velora Markalı Nevresim" data-en="Velora Branded Bedding">Velora Markalı Nevresim</li>
-          <li data-tr="LED Asma Tavan" data-en="LED Recessed Ceiling">LED Asma Tavan</li>
-          <li data-tr="Elbise Dolabı" data-en="Wardrobe">Elbise Dolabı</li>
-          <li data-tr="Ayna" data-en="Mirror">Ayna</li>
-          <li data-tr="Gece Lambası" data-en="Bedside Lamp">Gece Lambası</li>
-          <li data-tr="Özel Banyo" data-en="Private Bathroom">Özel Banyo</li>
-          <li data-tr="Isıtma Sistemi" data-en="Heating System">Isıtma Sistemi</li>
-        </ul>
-        <br>
-        <a href="contact.html" class="btn btn-primary" data-tr="Rezervasyon Yap" data-en="Book Now">Rezervasyon Yap</a>
-      </div>
-    </div>
 
-    <!-- ── ODA 2: Twin — İki tekli yatak (5.jpg / twin-room.jpg) ── -->
-    <div class="about-grid reveal" style="margin-bottom:6rem;padding-bottom:6rem;border-bottom:1px solid var(--clr-border);">
-      <div style="order:-1;">
-        <p class="section-label" data-tr="Standart Oda" data-en="Standard Room">Standart Oda</p>
-        <h2 data-tr-html="Twin <em>Oda</em>" data-en-html="Twin <em>Room</em>">Twin <em>Oda</em></h2>
-        <div class="gold-divider"></div>
-        <p style="color:var(--clr-muted);font-size:.95rem;margin-bottom:1.5rem;" data-tr="İki ayrı tek yatakla arkadaş grupları veya aile için mükemmel. Yataklar arasında gardırop ve her iki yatağa yönelik okuma lambası mevcuttur." data-en="Perfect for friends or family with two separate single beds. Features a shared wardrobe between the beds and individual reading lamps.">İki ayrı tek yatakla arkadaş grupları veya aile için mükemmel. Yataklar arasında gardırop ve her iki yatağa yönelik okuma lambası mevcuttur.</p>
-        <ul class="features-list">
-          <li data-tr="2 Ayrı Tek Kişilik Yatak" data-en="2 Separate Single Beds">2 Ayrı Tek Kişilik Yatak</li>
-          <li data-tr="LED Asma Tavan" data-en="LED Recessed Ceiling">LED Asma Tavan</li>
-          <li data-tr="Gardırop" data-en="Wardrobe">Gardırop</li>
-          <li data-tr="Okuma Lambası" data-en="Reading Lamp">Okuma Lambası</li>
-          <li data-tr="Isıtma Sistemi" data-en="Heating System">Isıtma Sistemi</li>
-          <li data-tr="Özel Banyo" data-en="Private Bathroom">Özel Banyo</li>
-          <li data-tr="Bej Perdeler" data-en="Beige Curtains">Bej Perdeler</li>
-          <li data-tr="Geniş Alan" data-en="Spacious Layout">Geniş Alan</li>
-        </ul>
-        <br>
-        <a href="contact.html" class="btn btn-primary" data-tr="Rezervasyon Yap" data-en="Book Now">Rezervasyon Yap</a>
+      <!-- PANEL 1: Queen Suite -->
+      <div class="tab-panel">
+        <div class="about-grid">
+          <div class="about-img img-trigger">
+            <img src="../assets/img/hero-room.jpg" alt="Velora markalı Queen Suite yatak odası"
+              style="height:460px;border-radius:4px;width:100%;object-position:center top;">
+          </div>
+          <div>
+            <p class="section-label" data-tr="Suite Oda" data-en="Suite Room">Suite Oda</p>
+            <h2 data-tr-html="Queen <em>Suite</em>" data-en-html="Queen <em>Suite</em>">Queen <em>Suite</em></h2>
+            <div class="gold-divider"></div>
+            <p style="color:var(--clr-muted);font-size:.95rem;margin-bottom:1.5rem;"
+              data-tr="Velora markasını yansıtan özel nevresim ve yastık takımları, duvarda asılı marka logosu ve LED asma tavan ile premium bir oda deneyimi sunar."
+              data-en="Featuring Velora-branded bedding and pillowcases, a wall-mounted brand logo, and LED recessed ceiling — a truly premium room experience.">
+              Velora markasını yansıtan özel nevresim ve yastık takımları, duvarda asılı marka logosu ve LED asma tavan ile premium bir oda deneyimi sunar.</p>
+            <ul class="features-list">
+              <li data-tr="1 Queen / Çift Kişilik Yatak" data-en="1 Queen / Double Bed">1 Queen / Çift Kişilik Yatak</li>
+              <li data-tr="Velora Markalı Nevresim" data-en="Velora Branded Bedding">Velora Markalı Nevresim</li>
+              <li data-tr="LED Asma Tavan" data-en="LED Recessed Ceiling">LED Asma Tavan</li>
+              <li data-tr="Elbise Dolabı" data-en="Wardrobe">Elbise Dolabı</li>
+              <li data-tr="Ayna" data-en="Mirror">Ayna</li>
+              <li data-tr="Gece Lambası" data-en="Bedside Lamp">Gece Lambası</li>
+              <li data-tr="Özel Banyo" data-en="Private Bathroom">Özel Banyo</li>
+              <li data-tr="Isıtma Sistemi" data-en="Heating System">Isıtma Sistemi</li>
+            </ul>
+            <br>
+            <a href="contact.html" class="btn btn-primary" data-tr="Rezervasyon Yap" data-en="Book Now">Rezervasyon Yap</a>
+          </div>
+        </div>
       </div>
-      <div class="about-img img-trigger">
-        <img src="../assets/img/twin-room.jpg" alt="İki ayrı tekli yataklı twin oda" style="height:460px;border-radius:4px;width:100%;">
-      </div>
-    </div>
 
-    <!-- ── ODA 3: Deluxe Double — Büyük çift yatak (6.jpg / double-room.jpg) ── -->
-    <div class="about-grid reveal" style="margin-bottom:5rem;padding-bottom:5rem;border-bottom:1px solid var(--clr-border);">
-      <div class="about-img img-trigger">
-        <img src="../assets/img/double-room.jpg" alt="Deluxe Double geniş çift kişilik yatak odası" style="height:460px;border-radius:4px;width:100%;">
+      <!-- PANEL 2: Twin Oda -->
+      <div class="tab-panel">
+        <div class="about-grid">
+          <div style="order:-1;">
+            <p class="section-label" data-tr="Standart Oda" data-en="Standard Room">Standart Oda</p>
+            <h2 data-tr-html="Twin <em>Oda</em>" data-en-html="Twin <em>Room</em>">Twin <em>Oda</em></h2>
+            <div class="gold-divider"></div>
+            <p style="color:var(--clr-muted);font-size:.95rem;margin-bottom:1.5rem;"
+              data-tr="İki ayrı tek yatakla arkadaş grupları veya aile için mükemmel. Yataklar arasında gardırop ve her iki yatağa yönelik okuma lambası mevcuttur."
+              data-en="Perfect for friends or family with two separate single beds. Features a shared wardrobe between the beds and individual reading lamps.">
+              İki ayrı tek yatakla arkadaş grupları veya aile için mükemmel. Yataklar arasında gardırop ve her iki yatağa yönelik okuma lambası mevcuttur.</p>
+            <ul class="features-list">
+              <li data-tr="2 Ayrı Tek Kişilik Yatak" data-en="2 Separate Single Beds">2 Ayrı Tek Kişilik Yatak</li>
+              <li data-tr="LED Asma Tavan" data-en="LED Recessed Ceiling">LED Asma Tavan</li>
+              <li data-tr="Gardırop" data-en="Wardrobe">Gardırop</li>
+              <li data-tr="Okuma Lambası" data-en="Reading Lamp">Okuma Lambası</li>
+              <li data-tr="Isıtma Sistemi" data-en="Heating System">Isıtma Sistemi</li>
+              <li data-tr="Özel Banyo" data-en="Private Bathroom">Özel Banyo</li>
+              <li data-tr="Bej Perdeler" data-en="Beige Curtains">Bej Perdeler</li>
+              <li data-tr="Geniş Alan" data-en="Spacious Layout">Geniş Alan</li>
+            </ul>
+            <br>
+            <a href="contact.html" class="btn btn-primary" data-tr="Rezervasyon Yap" data-en="Book Now">Rezervasyon Yap</a>
+          </div>
+          <div class="about-img img-trigger">
+            <img src="../assets/img/twin-room.jpg" alt="İki ayrı tekli yataklı twin oda"
+              style="height:460px;border-radius:4px;width:100%;">
+          </div>
+        </div>
       </div>
-      <div>
-        <p class="section-label" data-tr="Deluxe Oda" data-en="Deluxe Room">Deluxe Oda</p>
-        <h2 data-tr-html="Deluxe <em>Double</em>" data-en-html="Deluxe <em>Double</em>">Deluxe <em>Double</em></h2>
-        <div class="gold-divider"></div>
-        <p style="color:var(--clr-muted);font-size:.95rem;margin-bottom:1.5rem;" data-tr="Geniş çift kişilik yatak, LED asma tavan aydınlatması ve ferah tasarımıyla romantik ya da uzun konaklamalar için tercih edilen lüks oda." data-en="Spacious double bed, LED recessed ceiling lighting, and an open layout — the preferred choice for romantic getaways or extended stays.">Geniş çift kişilik yatak, LED asma tavan aydınlatması ve ferah tasarımıyla romantik ya da uzun konaklamalar için tercih edilen lüks oda.</p>
-        <ul class="features-list">
-          <li data-tr="1 Büyük Çift Kişilik Yatak" data-en="1 Large Double Bed">1 Büyük Çift Kişilik Yatak</li>
-          <li data-tr="LED Asma Tavan" data-en="LED Recessed Ceiling">LED Asma Tavan</li>
-          <li data-tr="Elbise Dolabı" data-en="Wardrobe">Elbise Dolabı</li>
-          <li data-tr="Ayna" data-en="Mirror">Ayna</li>
-          <li data-tr="Premium Nevresim" data-en="Premium Bedding">Premium Nevresim</li>
-          <li data-tr="Gece Lambası" data-en="Bedside Lamp">Gece Lambası</li>
-          <li data-tr="Özel Banyo" data-en="Private Bathroom">Özel Banyo</li>
-          <li data-tr="Isıtma" data-en="Heating">Isıtma</li>
-        </ul>
-        <br>
-        <a href="contact.html" class="btn btn-primary" data-tr="Rezervasyon Yap" data-en="Book Now">Rezervasyon Yap</a>
+
+      <!-- PANEL 3: Deluxe Double -->
+      <div class="tab-panel">
+        <div class="about-grid">
+          <div class="about-img img-trigger">
+            <img src="../assets/img/double-room.jpg" alt="Deluxe Double geniş çift kişilik yatak odası"
+              style="height:460px;border-radius:4px;width:100%;">
+          </div>
+          <div>
+            <p class="section-label" data-tr="Deluxe Oda" data-en="Deluxe Room">Deluxe Oda</p>
+            <h2 data-tr-html="Deluxe <em>Double</em>" data-en-html="Deluxe <em>Double</em>">Deluxe <em>Double</em></h2>
+            <div class="gold-divider"></div>
+            <p style="color:var(--clr-muted);font-size:.95rem;margin-bottom:1.5rem;"
+              data-tr="Geniş çift kişilik yatak, LED asma tavan aydınlatması ve ferah tasarımıyla romantik ya da uzun konaklamalar için tercih edilen lüks oda."
+              data-en="Spacious double bed, LED recessed ceiling lighting, and an open layout — the preferred choice for romantic getaways or extended stays.">
+              Geniş çift kişilik yatak, LED asma tavan aydınlatması ve ferah tasarımıyla romantik ya da uzun konaklamalar için tercih edilen lüks oda.</p>
+            <ul class="features-list">
+              <li data-tr="1 Büyük Çift Kişilik Yatak" data-en="1 Large Double Bed">1 Büyük Çift Kişilik Yatak</li>
+              <li data-tr="LED Asma Tavan" data-en="LED Recessed Ceiling">LED Asma Tavan</li>
+              <li data-tr="Elbise Dolabı" data-en="Wardrobe">Elbise Dolabı</li>
+              <li data-tr="Ayna" data-en="Mirror">Ayna</li>
+              <li data-tr="Premium Nevresim" data-en="Premium Bedding">Premium Nevresim</li>
+              <li data-tr="Gece Lambası" data-en="Bedside Lamp">Gece Lambası</li>
+              <li data-tr="Özel Banyo" data-en="Private Bathroom">Özel Banyo</li>
+              <li data-tr="Isıtma" data-en="Heating">Isıtma</li>
+            </ul>
+            <br>
+            <a href="contact.html" class="btn btn-primary" data-tr="Rezervasyon Yap" data-en="Book Now">Rezervasyon Yap</a>
+          </div>
+        </div>
       </div>
     </div>
 
