@@ -10,28 +10,81 @@
   <title>İletişim — Velora Suit Hotel</title>
   <link rel="stylesheet" href="../assets/css/style.css">
   <style>
+    /* ── Form genel ── */
     .contact-form { display:flex; flex-direction:column; gap:1.2rem; margin-top:2rem; }
-    .form-group { display:flex; flex-direction:column; gap:.4rem; }
-    .form-group label { font-size:.7rem; letter-spacing:.15em; text-transform:uppercase; color:var(--clr-gold); }
+    .form-group { display:flex; flex-direction:column; gap:.4rem; position:relative; }
+    .form-group label {
+      font-size:.7rem; letter-spacing:.15em; text-transform:uppercase; color:var(--clr-gold);
+      display:flex; align-items:center; gap:.3rem;
+    }
+    .form-group label .required-star { color:#e05a5a; font-size:.8rem; }
     .form-group input,
     .form-group textarea,
     .form-group select {
       background:var(--clr-surface); border:1px solid var(--clr-border); border-radius:var(--radius);
       padding:.85rem 1rem; color:var(--clr-cream); font-family:var(--ff-body); font-size:.9rem;
-      font-weight:300; outline:none; transition:border-color var(--transition); width:100%;
+      font-weight:300; outline:none; transition:border-color .25s ease, box-shadow .25s ease; width:100%;
       -webkit-appearance:none;
     }
     .form-group input::placeholder, .form-group textarea::placeholder { color:var(--clr-muted); }
-    .form-group input:focus, .form-group textarea:focus, .form-group select:focus { border-color:var(--clr-gold); }
+    .form-group input:focus, .form-group textarea:focus, .form-group select:focus {
+      border-color:var(--clr-gold);
+      box-shadow: 0 0 0 3px rgba(197,165,90,0.15);
+    }
     .form-group textarea { resize:vertical; min-height:130px; }
     .form-group select option { background:var(--clr-surface); color:var(--clr-cream); }
-    .form-row { display:grid; grid-template-columns:1fr 1fr; gap:1rem; }
-    .form-success {
-      display:none; background:rgba(197,165,90,.1); border:1px solid var(--clr-gold);
-      border-radius:var(--radius); padding:1.2rem 1.5rem; color:var(--clr-gold);
-      font-size:.9rem; text-align:center; margin-top:1rem;
+
+    /* ── Hata durumu ── */
+    .form-group input.error,
+    .form-group textarea.error,
+    .form-group select.error {
+      border-color:#e05a5a;
+      box-shadow: 0 0 0 3px rgba(224,90,90,0.15);
     }
+    .form-group input.success,
+    .form-group textarea.success,
+    .form-group select.success {
+      border-color:#5ab87a;
+      box-shadow: 0 0 0 3px rgba(90,184,122,0.12);
+    }
+
+    /* ── Hata mesajı ── */
+    .field-error {
+      display:none;
+      font-size:.72rem;
+      color:#e05a5a;
+      margin-top:.2rem;
+      letter-spacing:.02em;
+    }
+    .field-error.visible { display:block; animation: errSlide .2s ease; }
+    @keyframes errSlide {
+      from { opacity:0; transform:translateY(-4px); }
+      to   { opacity:1; transform:translateY(0); }
+    }
+
+    /* ── Form sonuç mesajları ── */
+    .form-success, .form-error-banner {
+      display:none; border-radius:var(--radius);
+      padding:1.2rem 1.5rem; font-size:.9rem; text-align:center; margin-top:.5rem;
+    }
+    .form-success {
+      background:rgba(90,184,122,.1); border:1px solid #5ab87a; color:#5ab87a;
+    }
+    .form-error-banner {
+      background:rgba(224,90,90,.1); border:1px solid #e05a5a; color:#e05a5a;
+    }
+
+    /* ── Karakter sayacı ── */
+    .char-count {
+      font-size:.68rem; color:var(--clr-muted); text-align:right; margin-top:.2rem;
+    }
+    .char-count.warn { color:#e0a45a; }
+
+    .form-row { display:grid; grid-template-columns:1fr 1fr; gap:1rem; }
     @media (max-width:540px) { .form-row { grid-template-columns:1fr; } }
+
+    /* ── Buton yükleme durumu ── */
+    .btn-loading { opacity:.7; pointer-events:none; }
   </style>
 </head>
 <body>
@@ -56,6 +109,7 @@
   <li><a href="rooms.html" data-tr="Odalar" data-en="Rooms">Odalar</a></li>
   <li><a href="amenities.html" data-tr="Olanaklar" data-en="Amenities">Olanaklar</a></li>
   <li><a href="contact.html" data-tr="İletişim" data-en="Contact">İletişim</a></li>
+      <li><a href="login.html" class="admin-footer-btn" data-tr="🔐 Admin" data-en="🔐 Admin">🔐 Admin</a></li>
 </ul>
 
 <div class="page-hero">
@@ -112,41 +166,130 @@
         <div class="reveal">
           <p class="section-label" style="margin-top:2rem;" data-tr="Rezervasyon Formu" data-en="Reservation Form">Rezervasyon Formu</p>
           <form class="contact-form" id="reservationForm" novalidate>
+
             <div class="form-row">
+              <!-- Ad Soyad - zorunlu -->
               <div class="form-group">
-                <label data-tr="Ad Soyad" data-en="Full Name">Ad Soyad</label>
-                <input type="text" name="name" data-placeholder-tr="Adınızı girin" data-placeholder-en="Enter your name" placeholder="Adınızı girin" required>
+                <label for="name">
+                  <span data-tr="Ad Soyad" data-en="Full Name">Ad Soyad</span>
+                  <span class="required-star" aria-hidden="true">*</span>
+                </label>
+                <input type="text" id="name" name="name"
+                  data-placeholder-tr="Adınızı ve soyadınızı girin"
+                  data-placeholder-en="Enter your full name"
+                  placeholder="Adınızı ve soyadınızı girin"
+                  required minlength="3">
+                <span class="field-error" id="name-error"
+                  data-tr="Ad soyad en az 3 karakter olmalıdır."
+                  data-en="Full name must be at least 3 characters.">Ad soyad en az 3 karakter olmalıdır.</span>
               </div>
+
+              <!-- E-posta - zorunlu, format kontrolü -->
               <div class="form-group">
-                <label data-tr="Telefon" data-en="Phone">Telefon</label>
-                <input type="tel" name="phone" placeholder="+90 5XX XXX XX XX">
+                <label for="email">
+                  <span data-tr="E-posta" data-en="Email">E-posta</span>
+                  <span class="required-star" aria-hidden="true">*</span>
+                </label>
+                <input type="email" id="email" name="email"
+                  data-placeholder-tr="ornek@email.com"
+                  data-placeholder-en="example@email.com"
+                  placeholder="ornek@email.com"
+                  required>
+                <span class="field-error" id="email-error"
+                  data-tr="Geçerli bir e-posta adresi girin. (ornek@email.com)"
+                  data-en="Please enter a valid email address. (example@email.com)">Geçerli bir e-posta adresi girin. (ornek@email.com)</span>
               </div>
             </div>
+
             <div class="form-row">
+              <!-- Telefon -->
               <div class="form-group">
-                <label data-tr="Giriş Tarihi" data-en="Check-in Date">Giriş Tarihi</label>
-                <input type="date" name="checkin">
+                <label for="phone">
+                  <span data-tr="Telefon" data-en="Phone">Telefon</span>
+                </label>
+                <input type="tel" id="phone" name="phone"
+                  data-placeholder-tr="+90 5XX XXX XX XX"
+                  data-placeholder-en="+90 5XX XXX XX XX"
+                  placeholder="+90 5XX XXX XX XX">
+                <span class="field-error" id="phone-error"
+                  data-tr="Geçerli bir telefon numarası girin."
+                  data-en="Please enter a valid phone number.">Geçerli bir telefon numarası girin.</span>
               </div>
+
+              <!-- Oda Tipi - zorunlu -->
               <div class="form-group">
-                <label data-tr="Çıkış Tarihi" data-en="Check-out Date">Çıkış Tarihi</label>
-                <input type="date" name="checkout">
+                <label for="room">
+                  <span data-tr="Oda Tipi" data-en="Room Type">Oda Tipi</span>
+                  <span class="required-star" aria-hidden="true">*</span>
+                </label>
+                <select id="room" name="room" required>
+                  <option value="" data-tr="Oda seçin" data-en="Select a room">Oda seçin</option>
+                  <option value="queen" data-tr="Queen Suite" data-en="Queen Suite">Queen Suite</option>
+                  <option value="twin" data-tr="Twin Oda" data-en="Twin Room">Twin Oda</option>
+                  <option value="deluxe" data-tr="Deluxe Double" data-en="Deluxe Double">Deluxe Double</option>
+                </select>
+                <span class="field-error" id="room-error"
+                  data-tr="Lütfen bir oda tipi seçin."
+                  data-en="Please select a room type.">Lütfen bir oda tipi seçin.</span>
               </div>
             </div>
-            <div class="form-group">
-              <label data-tr="Oda Tipi" data-en="Room Type">Oda Tipi</label>
-              <select name="room">
-                <option value="" data-tr="Oda seçin" data-en="Select a room">Oda seçin</option>
-                <option value="queen" data-tr="Queen Suite" data-en="Queen Suite">Queen Suite</option>
-                <option value="twin" data-tr="Twin Oda" data-en="Twin Room">Twin Oda</option>
-                <option value="deluxe" data-tr="Deluxe Double" data-en="Deluxe Double">Deluxe Double</option>
-              </select>
+
+            <div class="form-row">
+              <!-- Giriş Tarihi - zorunlu -->
+              <div class="form-group">
+                <label for="checkin">
+                  <span data-tr="Giriş Tarihi" data-en="Check-in Date">Giriş Tarihi</span>
+                  <span class="required-star" aria-hidden="true">*</span>
+                </label>
+                <input type="date" id="checkin" name="checkin" required>
+                <span class="field-error" id="checkin-error"
+                  data-tr="Giriş tarihini seçin."
+                  data-en="Please select a check-in date.">Giriş tarihini seçin.</span>
+              </div>
+
+              <!-- Çıkış Tarihi - zorunlu -->
+              <div class="form-group">
+                <label for="checkout">
+                  <span data-tr="Çıkış Tarihi" data-en="Check-out Date">Çıkış Tarihi</span>
+                  <span class="required-star" aria-hidden="true">*</span>
+                </label>
+                <input type="date" id="checkout" name="checkout" required>
+                <span class="field-error" id="checkout-error"
+                  data-tr="Çıkış tarihi giriş tarihinden sonra olmalıdır."
+                  data-en="Check-out date must be after check-in date.">Çıkış tarihi giriş tarihinden sonra olmalıdır.</span>
+              </div>
             </div>
+
+            <!-- Mesaj - karakter sayacı -->
             <div class="form-group">
-              <label data-tr="Mesaj / Özel İstek" data-en="Message / Special Request">Mesaj / Özel İstek</label>
-              <textarea name="message" data-placeholder-tr="Eklemek istediğiniz bilgileri buraya yazabilirsiniz..." data-placeholder-en="Write any additional requests or information here..." placeholder="Eklemek istediğiniz bilgileri buraya yazabilirsiniz..."></textarea>
+              <label for="message">
+                <span data-tr="Mesaj / Özel İstek" data-en="Message / Special Request">Mesaj / Özel İstek</span>
+              </label>
+              <textarea id="message" name="message" maxlength="500"
+                data-placeholder-tr="Eklemek istediğiniz bilgi veya özel isteğinizi yazın... (maks. 500 karakter)"
+                data-placeholder-en="Write any additional info or special requests... (max. 500 characters)"
+                placeholder="Eklemek istediğiniz bilgi veya özel isteğinizi yazın... (maks. 500 karakter)"></textarea>
+              <span class="char-count" id="charCount">0 / 500</span>
             </div>
-            <button type="submit" class="btn btn-primary" data-tr="Talep Gönder" data-en="Send Request">Talep Gönder</button>
-            <div class="form-success" id="formSuccess" data-tr="✓ Talebiniz alındı. En kısa sürede sizinle iletişime geçeceğiz." data-en="✓ Your request has been received. We will get back to you shortly.">✓ Talebiniz alındı. En kısa sürede sizinle iletişime geçeceğiz.</div>
+
+            <!-- Hata banner -->
+            <div class="form-error-banner" id="formErrorBanner"
+              data-tr="⚠ Lütfen kırmızı işaretli alanları düzeltin."
+              data-en="⚠ Please correct the highlighted fields.">
+              ⚠ Lütfen kırmızı işaretli alanları düzeltin.
+            </div>
+
+            <button type="submit" class="btn btn-primary" id="submitBtn"
+              data-tr="Rezervasyon Talebini Gönder" data-en="Send Reservation Request">
+              Rezervasyon Talebini Gönder
+            </button>
+
+            <div class="form-success" id="formSuccess"
+              data-tr="✓ Rezervasyon talebiniz alındı! En kısa sürede sizinle iletişime geçeceğiz."
+              data-en="✓ Your reservation request has been received! We will contact you shortly.">
+              ✓ Rezervasyon talebiniz alındı! En kısa sürede sizinle iletişime geçeceğiz.
+            </div>
+
           </form>
         </div>
       </div>
@@ -189,14 +332,195 @@
       <li><a href="rooms.html" data-tr="Odalar" data-en="Rooms">Odalar</a></li>
       <li><a href="amenities.html" data-tr="Olanaklar" data-en="Amenities">Olanaklar</a></li>
       <li><a href="contact.html" data-tr="İletişim" data-en="Contact">İletişim</a></li>
+      <li><a href="login.html" class="admin-footer-btn" data-tr="🔐 Admin" data-en="🔐 Admin">🔐 Admin</a></li>
     </ul>
   </div>
 </footer>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="../assets/js/main.js"></script>
+<script src="../assets/js/main.js"></script>
 <script>
-  document.getElementById('reservationForm').addEventListener('submit', function(e) {
+(function () {
+  const form      = document.getElementById('reservationForm');
+  const submitBtn = document.getElementById('submitBtn');
+  const success   = document.getElementById('formSuccess');
+  const errBanner = document.getElementById('formErrorBanner');
+  const msgArea   = document.getElementById('message');
+  const charCount = document.getElementById('charCount');
+
+  // Karakter sayacı
+  if (msgArea) {
+    msgArea.addEventListener('input', () => {
+      const len = msgArea.value.length;
+      charCount.textContent = len + ' / 500';
+      charCount.classList.toggle('warn', len > 400);
+    });
+  }
+
+  // Tarihleri bugünden itibaren sınırla
+  const today = new Date().toISOString().split('T')[0];
+  document.getElementById('checkin').min  = today;
+  document.getElementById('checkout').min = today;
+
+  document.getElementById('checkin').addEventListener('change', function () {
+    document.getElementById('checkout').min = this.value;
+    if (document.getElementById('checkout').value &&
+        document.getElementById('checkout').value <= this.value) {
+      document.getElementById('checkout').value = '';
+    }
+  });
+
+  // Tek alan doğrulama
+  function validateField(field, errorId, customCheck) {
+    const errEl = document.getElementById(errorId);
+    let valid = true;
+    let msg = '';
+
+    if (field.hasAttribute('required') && !field.value.trim()) {
+      valid = false;
+      msg = errEl ? errEl.getAttribute('data-' + currentLang) : '';
+    } else if (customCheck) {
+      const result = customCheck(field.value);
+      if (result !== true) { valid = false; msg = result; }
+    }
+
+    field.classList.toggle('error',  !valid);
+    field.classList.toggle('success', valid && field.value.trim() !== '');
+    if (errEl) {
+      if (msg) errEl.textContent = msg;
+      errEl.classList.toggle('visible', !valid);
+    }
+    return valid;
+  }
+
+  // E-posta format
+  function isValidEmail(val) {
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(val)) {
+      return document.getElementById('email-error').getAttribute('data-' + currentLang);
+    }
+    return true;
+  }
+
+  // Telefon format (opsiyonel alan)
+  function isValidPhone(val) {
+    if (!val) return true;
+    if (!/^[+\d\s\-()]{7,20}$/.test(val)) {
+      return document.getElementById('phone-error').getAttribute('data-' + currentLang);
+    }
+    return true;
+  }
+
+  // Tarih mantık kontrolü
+  function isValidDates() {
+    const ci = document.getElementById('checkin').value;
+    const co = document.getElementById('checkout').value;
+    if (ci && co && co <= ci) {
+      return document.getElementById('checkout-error').getAttribute('data-' + currentLang);
+    }
+    return true;
+  }
+
+  // Anlık doğrulama (blur)
+  document.getElementById('name').addEventListener('blur', function () {
+    validateField(this, 'name-error', v => v.trim().length >= 3 ? true :
+      document.getElementById('name-error').getAttribute('data-' + currentLang));
+  });
+  document.getElementById('email').addEventListener('blur', function () {
+    validateField(this, 'email-error', isValidEmail);
+  });
+  document.getElementById('phone').addEventListener('blur', function () {
+    if (this.value) validateField(this, 'phone-error', isValidPhone);
+  });
+  document.getElementById('room').addEventListener('change', function () {
+    validateField(this, 'room-error');
+  });
+  document.getElementById('checkin').addEventListener('change', function () {
+    validateField(this, 'checkin-error');
+  });
+  document.getElementById('checkout').addEventListener('change', function () {
+    const dateOk = isValidDates();
+    const valid  = this.value && dateOk === true;
+    this.classList.toggle('error',   !valid);
+    this.classList.toggle('success',  valid);
+    const errEl = document.getElementById('checkout-error');
+    if (dateOk !== true) errEl.textContent = dateOk;
+    errEl.classList.toggle('visible', !valid);
+  });
+
+  // Form gönderim
+  form.addEventListener('submit', function (e) {
     e.preventDefault();
-    const success = document.getElementById('formSuccess');
-    // Apply current lang to success message
-    success.textContent = success.getAttribute('
+
+    const checks = [
+      validateField(document.getElementById('name'), 'name-error',
+        v => v.trim().length >= 3 ? true : document.getElementById('name-error').getAttribute('data-' + currentLang)),
+      validateField(document.getElementById('email'), 'email-error', isValidEmail),
+      validateField(document.getElementById('room'), 'room-error'),
+      validateField(document.getElementById('checkin'), 'checkin-error'),
+    ];
+
+    // Checkout tarih mantığı
+    const co = document.getElementById('checkout');
+    const coErrEl = document.getElementById('checkout-error');
+    const dateResult = isValidDates();
+    const coValid = co.value && dateResult === true;
+    co.classList.toggle('error',  !coValid);
+    co.classList.toggle('success', coValid);
+    if (!coValid) coErrEl.textContent = dateResult !== true ? dateResult :
+      coErrEl.getAttribute('data-' + currentLang);
+    coErrEl.classList.toggle('visible', !coValid);
+    checks.push(coValid);
+
+    // Telefon dolu ise kontrol
+    const phone = document.getElementById('phone');
+    if (phone.value) checks.push(validateField(phone, 'phone-error', isValidPhone));
+
+    const allValid = checks.every(Boolean);
+    errBanner.textContent = errBanner.getAttribute('data-' + currentLang);
+    errBanner.style.display = allValid ? 'none' : 'block';
+    success.style.display = 'none';
+
+    if (!allValid) {
+      const firstErr = form.querySelector('.error');
+      if (firstErr) firstErr.scrollIntoView({ behavior:'smooth', block:'center' });
+      return;
+    }
+
+    // Başarı
+    submitBtn.classList.add('btn-loading');
+    const origText = submitBtn.getAttribute('data-' + currentLang);
+    submitBtn.textContent = currentLang === 'tr' ? 'Gönderiliyor...' : 'Sending...';
+
+    setTimeout(() => {
+      // Rezervasyonu localStorage'a kaydet
+      if (typeof saveReservation === 'function') {
+        saveReservation({
+          name:     document.getElementById('name').value,
+          email:    document.getElementById('email').value,
+          phone:    document.getElementById('phone').value,
+          room:     document.getElementById('room').value,
+          checkin:  document.getElementById('checkin').value,
+          checkout: document.getElementById('checkout').value,
+          message:  document.getElementById('message').value,
+        });
+      }
+
+      submitBtn.classList.remove('btn-loading');
+      submitBtn.textContent = origText;
+      success.textContent = success.getAttribute('data-' + currentLang);
+      success.style.display = 'block';
+      success.scrollIntoView({ behavior:'smooth', block:'center' });
+
+      form.reset();
+      charCount.textContent = '0 / 500';
+      form.querySelectorAll('input, select, textarea').forEach(el =>
+        el.classList.remove('error', 'success'));
+      form.querySelectorAll('.field-error').forEach(el =>
+        el.classList.remove('visible'));
+
+      setTimeout(() => success.style.display = 'none', 6000);
+    }, 900);
+  });
+})();
+</script>
+</body>
+</html>

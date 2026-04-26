@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Velora Suit Hotel — Giriş Yap / Kayıt Ol">
+  <meta name="theme-color" content="#0d0c0b">
+  <title>Giriş Yap — Velora Suit Hotel</title>
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <style>
+    .auth-page {
+      min-height: 100svh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: calc(var(--nav-h) + 2rem) 1.2rem 3rem;
+      background: var(--clr-bg);
+    }
+
+    .auth-card {
+      background: var(--clr-surface);
+      border: 1px solid var(--clr-border);
+      border-radius: var(--radius);
+      width: 100%;
+      max-width: 460px;
+      padding: 2.8rem 2.2rem;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+    }
+
+    .auth-logo {
+      font-family: var(--ff-display);
+      font-size: 1.3rem;
+      letter-spacing: 0.08em;
+      color: var(--clr-cream);
+      text-align: center;
+      margin-bottom: 0.3rem;
+    }
+    .auth-logo span { color: var(--clr-gold); }
+
+    .auth-sub {
+      text-align: center;
+      font-size: 0.78rem;
+      color: var(--clr-muted);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 2rem;
+    }
+
+    /* Sekmeler */
+    .auth-tabs {
+      display: flex;
+      border-bottom: 1px solid var(--clr-border);
+      margin-bottom: 2rem;
+    }
+    .auth-tab {
+      flex: 1;
+      padding: 0.85rem;
+      background: none;
+      border: none;
+      border-bottom: 2px solid transparent;
+      color: var(--clr-muted);
+      font-family: var(--ff-body);
+      font-size: 0.75rem;
+      font-weight: 500;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: color 0.25s, border-color 0.25s;
+      margin-bottom: -1px;
+    }
+    .auth-tab.active { color: var(--clr-gold); border-bottom-color: var(--clr-gold); }
+    .auth-tab:hover  { color: var(--clr-cream); }
+
+    .auth-panel { display: none; }
+    .auth-panel.active { display: block; }
+
+    /* Form alanları */
+    .auth-form { display: flex; flex-direction: column; gap: 1.1rem; }
+
+    .auth-group { display: flex; flex-direction: column; gap: 0.35rem; }
+
+    .auth-group label {
+      font-size: 0.68rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--clr-gold);
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+    .req { color: #e05a5a; }
+
+    .auth-group input {
+      background: var(--clr-bg);
+      border: 1px solid var(--clr-border);
+      border-radius: var(--radius);
+      padding: 0.85rem 1rem;
+      color: var(--clr-cream);
+      font-family: var(--ff-body);
+      font-size: 0.9rem;
+      font-weight: 300;
+      outline: none;
+      transition: border-color 0.25s, box-shadow 0.25s;
+      width: 100%;
+    }
+    .auth-group input::placeholder { color: var(--clr-muted); }
+    .auth-group input:focus {
+      border-color: var(--clr-gold);
+      box-shadow: 0 0 0 3px rgba(197,165,90,0.15);
+    }
+    .auth-group input.error   { border-color: #e05a5a; box-shadow: 0 0 0 3px rgba(224,90,90,0.12); }
+    .auth-group input.success { border-color: #5ab87a; box-shadow: 0 0 0 3px rgba(90,184,122,0.1); }
+
+    .field-err {
+      display: none;
+      font-size: 0.7rem;
+      color: #e05a5a;
+    }
+    .field-err.show { display: block; }
+
+    /* Mesajlar */
+    .auth-msg {
+      display: none;
+      padding: 0.9rem 1rem;
+      border-radius: var(--radius);
+      font-size: 0.85rem;
+      text-align: center;
+      margin-bottom: 0.5rem;
+    }
+    .auth-msg.success { background: rgba(90,184,122,.1); border: 1px solid #5ab87a; color: #5ab87a; }
+    .auth-msg.error   { background: rgba(224,90,90,.1);  border: 1px solid #e05a5a; color: #e05a5a; }
+
+    .auth-hint {
+      text-align: center;
+      font-size: 0.75rem;
+      color: var(--clr-muted);
+      margin-top: 1.2rem;
+    }
+    .auth-hint a { color: var(--clr-gold); text-decoration: underline; cursor: pointer; }
+
+    /* Admin ipucu kutusu */
+    .admin-hint {
+      background: rgba(197,165,90,0.08);
+      border: 1px solid rgba(197,165,90,0.3);
+      border-radius: var(--radius);
+      padding: 0.9rem 1rem;
+      font-size: 0.78rem;
+      color: var(--clr-muted);
+      margin-bottom: 1.5rem;
+      text-align: center;
+      line-height: 1.6;
+    }
+    .admin-hint strong { color: var(--clr-gold); }
+  </style>
+</head>
+<body>
+
+<nav class="navbar" role="navigation">
+  <a href="../index.html" class="navbar__brand">VELORA <span>SUIT</span> HOTEL</a>
+  <ul class="navbar__nav">
+    <li><a href="../index.html">Ana Sayfa</a></li>
+    <li><a href="rooms.html">Odalar</a></li>
+    <li><a href="amenities.html">Olanaklar</a></li>
+    <li><a href="contact.html">İletişim</a></li>
+  </ul>
+  <button class="lang-btn" onclick="toggleLang()">EN</button>
+  <button class="darkmode-btn" aria-label="Temayı değiştir">🌙</button>
+  <button class="hamburger" aria-label="Toggle menu" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<ul class="mobile-nav" role="list">
+  <li><a href="../index.html">Ana Sayfa</a></li>
+  <li><a href="rooms.html">Odalar</a></li>
+  <li><a href="amenities.html">Olanaklar</a></li>
+  <li><a href="contact.html">İletişim</a></li>
+</ul>
+
+<div class="auth-page">
+  <div class="auth-card">
+    <div class="auth-logo">VELORA <span>SUIT</span> HOTEL</div>
+    <p class="auth-sub" data-tr="Hesap Yönetimi" data-en="Account Management">Hesap Yönetimi</p>
+
+    <!-- Sekmeler -->
+    <div class="auth-tabs">
+      <button class="auth-tab active" id="tabLogin"
+        data-tr="Giriş Yap" data-en="Login" onclick="switchTab('login')">Giriş Yap</button>
+      <button class="auth-tab" id="tabRegister"
+        data-tr="Kayıt Ol" data-en="Register" onclick="switchTab('register')">Kayıt Ol</button>
+    </div>
+
+    <!-- GİRİŞ PANEL -->
+    <div class="auth-panel active" id="panelLogin">
+      <div class="auth-msg" id="loginMsg"></div>
+
+      <form class="auth-form" id="loginForm" novalidate>
+        <div class="auth-group">
+          <label for="loginEmail">
+            <span data-tr="E-posta" data-en="Email">E-posta</span>
+            <span class="req">*</span>
+          </label>
+          <input type="email" id="loginEmail" name="email"
+            data-placeholder-tr="ornek@email.com" data-placeholder-en="example@email.com"
+            placeholder="ornek@email.com" required>
+          <span class="field-err" id="loginEmailErr"
+            data-tr="Geçerli bir e-posta girin." data-en="Enter a valid email.">Geçerli bir e-posta girin.</span>
+        </div>
+
+        <div class="auth-group">
+          <label for="loginPass">
+            <span data-tr="Şifre" data-en="Password">Şifre</span>
+            <span class="req">*</span>
+          </label>
+          <input type="password" id="loginPass" name="password"
+            data-placeholder-tr="Şifrenizi girin" data-placeholder-en="Enter your password"
+            placeholder="Şifrenizi girin" required>
+          <span class="field-err" id="loginPassErr"
+            data-tr="Şifre en az 6 karakter olmalıdır." data-en="Password must be at least 6 characters.">Şifre en az 6 karakter olmalıdır.</span>
+        </div>
+
+        <button type="submit" class="btn btn-primary" id="loginBtn"
+          data-tr="Giriş Yap" data-en="Login">Giriş Yap</button>
+      </form>
+
+      <p class="auth-hint">
+        <span data-tr="Hesabınız yok mu?" data-en="Don't have an account?">Hesabınız yok mu?</span>
+        <a onclick="switchTab('register')" data-tr="Kayıt Ol" data-en="Register">Kayıt Ol</a>
+      </p>
+    </div>
+
+    <!-- KAYIT PANEL -->
+    <div class="auth-panel" id="panelRegister">
+      <div class="auth-msg" id="registerMsg"></div>
+
+      <form class="auth-form" id="registerForm" novalidate>
+        <div class="auth-group">
+          <label for="regName">
+            <span data-tr="Ad Soyad" data-en="Full Name">Ad Soyad</span>
+            <span class="req">*</span>
+          </label>
+          <input type="text" id="regName" name="name"
+            data-placeholder-tr="Adınız ve soyadınız" data-placeholder-en="Your full name"
+            placeholder="Adınız ve soyadınız" required minlength="3">
+          <span class="field-err" id="regNameErr"
+            data-tr="En az 3 karakter girin." data-en="Enter at least 3 characters.">En az 3 karakter girin.</span>
+        </div>
+
+        <div class="auth-group">
+          <label for="regEmail">
+            <span data-tr="E-posta" data-en="Email">E-posta</span>
+            <span class="req">*</span>
+          </label>
+          <input type="email" id="regEmail" name="email"
+            data-placeholder-tr="ornek@email.com" data-placeholder-en="example@email.com"
+            placeholder="ornek@email.com" required>
+          <span class="field-err" id="regEmailErr"
+            data-tr="Geçerli bir e-posta girin." data-en="Enter a valid email.">Geçerli bir e-posta girin.</span>
+        </div>
+
+        <div class="auth-group">
+          <label for="regPass">
+            <span data-tr="Şifre" data-en="Password">Şifre</span>
+            <span class="req">*</span>
+          </label>
+          <input type="password" id="regPass" name="password"
+            data-placeholder-tr="En az 6 karakter" data-placeholder-en="At least 6 characters"
+            placeholder="En az 6 karakter" required minlength="6">
+          <span class="field-err" id="regPassErr"
+            data-tr="Şifre en az 6 karakter olmalıdır." data-en="Password must be at least 6 characters.">Şifre en az 6 karakter olmalıdır.</span>
+        </div>
+
+        <div class="auth-group">
+          <label for="regPass2">
+            <span data-tr="Şifre Tekrar" data-en="Confirm Password">Şifre Tekrar</span>
+            <span class="req">*</span>
+          </label>
+          <input type="password" id="regPass2" name="password2"
+            data-placeholder-tr="Şifrenizi tekrar girin" data-placeholder-en="Re-enter your password"
+            placeholder="Şifrenizi tekrar girin" required>
+          <span class="field-err" id="regPass2Err"
+            data-tr="Şifreler eşleşmiyor." data-en="Passwords do not match.">Şifreler eşleşmiyor.</span>
+        </div>
+
+        <button type="submit" class="btn btn-primary" id="registerBtn"
+          data-tr="Kayıt Ol" data-en="Create Account">Kayıt Ol</button>
+      </form>
+
+      <p class="auth-hint">
+        <span data-tr="Zaten hesabınız var mı?" data-en="Already have an account?">Zaten hesabınız var mı?</span>
+        <a onclick="switchTab('login')" data-tr="Giriş Yap" data-en="Login">Giriş Yap</a>
+      </p>
+    </div>
+
+  </div>
+</div>
+
+<script src="../assets/js/main.js"></script>
+<script>
+  // Zaten giriş yaptıysa yönlendir
+  if (getSession()) {
+    window.location.href = isAdmin() ? 'admin.html' : '../index.html';
+  }
+
+  function switchTab(tab) {
+    document.getElementById('tabLogin').classList.toggle('active', tab === 'login');
+    document.getElementById('tabRegister').classList.toggle('active', tab === 'register');
+    document.getElementById('panelLogin').classList.toggle('active', tab === 'login');
+    document.getElementById('panelRegister').classList.toggle('active', tab === 'register');
+  }
+
+  function showMsg(id, text, type) {
+    const el = document.getElementById(id);
+    el.textContent = text;
+    el.className = 'auth-msg ' + type;
+    el.style.display = 'block';
+  }
+
+  function validateInput(input, errId, check) {
+    const errEl = document.getElementById(errId);
+    const valid = check(input.value);
+    input.classList.toggle('error', !valid);
+    input.classList.toggle('success', valid);
+    errEl.classList.toggle('show', !valid);
+    return valid;
+  }
+
+  // Giriş formu
+  document.getElementById('loginForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const email = document.getElementById('loginEmail');
+    const pass  = document.getElementById('loginPass');
+
+    const emailOk = validateInput(email, 'loginEmailErr', v => /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v));
+    const passOk  = validateInput(pass,  'loginPassErr',  v => v.length >= 6);
+    if (!emailOk || !passOk) return;
+
+    const users = JSON.parse(localStorage.getItem(USERS_KEY) || '[]');
+    const user  = users.find(u => u.email === email.value && u.password === pass.value);
+
+    if (!user) {
+      showMsg('loginMsg', currentLang === 'tr'
+        ? '✗ E-posta veya şifre hatalı.'
+        : '✗ Incorrect email or password.', 'error');
+      return;
+    }
+
+    setSession({ id: user.id, name: user.name, email: user.email, role: user.role });
+    showMsg('loginMsg', currentLang === 'tr'
+      ? '✓ Giriş başarılı, yönlendiriliyorsunuz...'
+      : '✓ Login successful, redirecting...', 'success');
+
+    setTimeout(() => {
+      window.location.href = user.role === 'admin' ? 'admin.html' : '../index.html';
+    }, 900);
+  });
+
+  // Kayıt formu
+  document.getElementById('registerForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const name  = document.getElementById('regName');
+    const email = document.getElementById('regEmail');
+    const pass  = document.getElementById('regPass');
+    const pass2 = document.getElementById('regPass2');
+
+    const ok1 = validateInput(name,  'regNameErr',  v => v.trim().length >= 3);
+    const ok2 = validateInput(email, 'regEmailErr', v => /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v));
+    const ok3 = validateInput(pass,  'regPassErr',  v => v.length >= 6);
+    const ok4 = validateInput(pass2, 'regPass2Err', v => v === pass.value);
+    if (!ok1 || !ok2 || !ok3 || !ok4) return;
+
+    const users = JSON.parse(localStorage.getItem(USERS_KEY) || '[]');
+    if (users.find(u => u.email === email.value)) {
+      showMsg('registerMsg', currentLang === 'tr'
+        ? '✗ Bu e-posta adresi zaten kayıtlı.'
+        : '✗ This email is already registered.', 'error');
+      return;
+    }
+
+    users.push({
+      id: 'u' + Date.now(),
+      name: name.value.trim(),
+      email: email.value,
+      password: pass.value,
+      role: 'user',
+      createdAt: new Date().toISOString()
+    });
+    localStorage.setItem(USERS_KEY, JSON.stringify(users));
+
+    showMsg('registerMsg', currentLang === 'tr'
+      ? '✓ Kayıt başarılı! Giriş yapabilirsiniz.'
+      : '✓ Registration successful! You can now log in.', 'success');
+
+    setTimeout(() => switchTab('login'), 1500);
+    this.reset();
+    this.querySelectorAll('input').forEach(i => i.classList.remove('error','success'));
+  });
+</script>
+</body>
+</html>

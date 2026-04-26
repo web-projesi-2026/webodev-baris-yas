@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0d0c0b">
+  <title>Admin Paneli — Velora Suit Hotel</title>
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <style>
+    .admin-layout {
+      display: flex;
+      min-height: 100svh;
+      padding-top: var(--nav-h);
+    }
+
+    /* ── Sidebar ── */
+    .admin-sidebar {
+      width: 240px;
+      flex-shrink: 0;
+      background: var(--clr-surface);
+      border-right: 1px solid var(--clr-border);
+      padding: 2rem 0;
+      position: sticky;
+      top: var(--nav-h);
+      height: calc(100svh - var(--nav-h));
+      overflow-y: auto;
+    }
+
+    .sidebar-brand {
+      padding: 0 1.5rem 1.5rem;
+      border-bottom: 1px solid var(--clr-border);
+      margin-bottom: 1.5rem;
+    }
+    .sidebar-brand h2 {
+      font-family: var(--ff-display);
+      font-size: 1rem;
+      color: var(--clr-cream);
+      font-weight: 300;
+    }
+    .sidebar-brand span { color: var(--clr-gold); }
+    .sidebar-brand p {
+      font-size: 0.7rem;
+      color: var(--clr-muted);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-top: 0.2rem;
+    }
+
+    .sidebar-nav { list-style: none; }
+    .sidebar-nav li a, .sidebar-nav li button {
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+      width: 100%;
+      padding: 0.8rem 1.5rem;
+      font-family: var(--ff-body);
+      font-size: 0.82rem;
+      color: var(--clr-muted);
+      background: none;
+      border: none;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s;
+      text-align: left;
+      letter-spacing: 0.05em;
+    }
+    .sidebar-nav li a:hover, .sidebar-nav li button:hover,
+    .sidebar-nav li a.active {
+      background: rgba(197,165,90,0.08);
+      color: var(--clr-gold);
+    }
+    .sidebar-nav .nav-icon { font-size: 1rem; width: 20px; text-align: center; }
+
+    /* ── Main ── */
+    .admin-main {
+      flex: 1;
+      padding: 2.5rem;
+      overflow-x: auto;
+    }
+
+    .admin-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .admin-header h1 {
+      font-size: 1.8rem;
+      color: var(--clr-cream);
+    }
+
+    .admin-welcome {
+      font-size: 0.82rem;
+      color: var(--clr-muted);
+      margin-top: 0.2rem;
+    }
+
+    /* ── Stat kartları ── */
+    .stat-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 1.2rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .stat-card {
+      background: var(--clr-surface);
+      border: 1px solid var(--clr-border);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+    }
+    .stat-card__label {
+      font-size: 0.65rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--clr-muted);
+      margin-bottom: 0.5rem;
+    }
+    .stat-card__value {
+      font-family: var(--ff-display);
+      font-size: 2rem;
+      color: var(--clr-cream);
+      line-height: 1;
+    }
+    .stat-card__value.gold { color: var(--clr-gold); }
+    .stat-card__value.green { color: #5ab87a; }
+    .stat-card__value.orange { color: #e0a45a; }
+    .stat-card__value.red { color: #e05a5a; }
+
+    /* ── Filtreler ── */
+    .table-controls {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-bottom: 1.2rem;
+    }
+
+    .search-box {
+      flex: 1;
+      min-width: 200px;
+      background: var(--clr-surface);
+      border: 1px solid var(--clr-border);
+      border-radius: var(--radius);
+      padding: 0.65rem 1rem;
+      color: var(--clr-cream);
+      font-family: var(--ff-body);
+      font-size: 0.85rem;
+      outline: none;
+      transition: border-color 0.25s;
+    }
+    .search-box:focus { border-color: var(--clr-gold); }
+    .search-box::placeholder { color: var(--clr-muted); }
+
+    .filter-select {
+      background: var(--clr-surface);
+      border: 1px solid var(--clr-border);
+      border-radius: var(--radius);
+      padding: 0.65rem 1rem;
+      color: var(--clr-cream);
+      font-family: var(--ff-body);
+      font-size: 0.82rem;
+      outline: none;
+      cursor: pointer;
+      -webkit-appearance: none;
+    }
+
+    /* ── Tablo ── */
+    .res-table-wrap {
+      background: var(--clr-surface);
+      border: 1px solid var(--clr-border);
+      border-radius: var(--radius);
+      overflow: auto;
+    }
+
+    .res-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.83rem;
+    }
+
+    .res-table th {
+      padding: 1rem 1.2rem;
+      text-align: left;
+      font-family: var(--ff-body);
+      font-size: 0.65rem;
+      font-weight: 600;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--clr-muted);
+      border-bottom: 1px solid var(--clr-border);
+      white-space: nowrap;
+    }
+
+    .res-table td {
+      padding: 1rem 1.2rem;
+      color: var(--clr-cream);
+      border-bottom: 1px solid rgba(42,37,32,0.5);
+      vertical-align: middle;
+    }
+
+    .res-table tr:last-child td { border-bottom: none; }
+    .res-table tr:hover td { background: rgba(197,165,90,0.04); }
+
+    /* Durum badge */
+    .badge {
+      display: inline-block;
+      padding: 0.2rem 0.7rem;
+      border-radius: 20px;
+      font-size: 0.7rem;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+    }
+    .badge-wait    { background: rgba(224,164,90,.15); color: #e0a45a; }
+    .badge-confirm { background: rgba(90,184,122,.15); color: #5ab87a; }
+    .badge-cancel  { background: rgba(224,90,90,.15);  color: #e05a5a; }
+
+    /* Durum select */
+    .status-select {
+      background: var(--clr-bg);
+      border: 1px solid var(--clr-border);
+      border-radius: var(--radius);
+      padding: 0.3rem 0.6rem;
+      color: var(--clr-cream);
+      font-family: var(--ff-body);
+      font-size: 0.75rem;
+      cursor: pointer;
+      outline: none;
+    }
+
+    /* Sil butonu */
+    .btn-delete {
+      background: transparent;
+      border: 1px solid rgba(224,90,90,0.35);
+      color: #e05a5a;
+      border-radius: var(--radius);
+      padding: 0.3rem 0.7rem;
+      font-size: 0.72rem;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .btn-delete:hover { background: rgba(224,90,90,0.15); }
+
+    /* Boş durum */
+    .empty-state {
+      text-align: center;
+      padding: 4rem 2rem;
+      color: var(--clr-muted);
+    }
+    .empty-state .icon { font-size: 3rem; margin-bottom: 1rem; }
+    .empty-state p { font-size: 0.9rem; }
+
+    /* Bildirim toast */
+    .toast {
+      position: fixed;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%) translateY(80px);
+      background: var(--clr-surface);
+      border: 1px solid var(--clr-gold);
+      color: var(--clr-gold);
+      padding: 0.8rem 1.8rem;
+      border-radius: var(--radius);
+      font-size: 0.85rem;
+      z-index: 3000;
+      transition: transform 0.3s ease;
+      white-space: nowrap;
+    }
+    .toast.show { transform: translateX(-50%) translateY(0); }
+
+    /* Detay modal */
+    .detail-modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 2000;
+      background: rgba(0,0,0,0.7);
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+      backdrop-filter: blur(4px);
+    }
+    .detail-modal.open { display: flex; }
+    .detail-box {
+      background: var(--clr-surface);
+      border: 1px solid var(--clr-border);
+      border-radius: var(--radius);
+      padding: 2.2rem;
+      max-width: 520px;
+      width: 100%;
+      max-height: 90svh;
+      overflow-y: auto;
+    }
+    .detail-box h3 {
+      font-size: 1.4rem;
+      margin-bottom: 1.5rem;
+      color: var(--clr-cream);
+    }
+    .detail-row {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 0.8rem;
+      font-size: 0.87rem;
+    }
+    .detail-row strong {
+      min-width: 130px;
+      color: var(--clr-gold);
+      font-size: 0.7rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding-top: 0.1rem;
+    }
+    .detail-row span { color: var(--clr-muted); line-height: 1.5; }
+
+    @media (max-width: 768px) {
+      .admin-sidebar { display: none; }
+      .admin-main { padding: 1.2rem; }
+    }
+  </style>
+</head>
+<body>
+
+<nav class="navbar" role="navigation">
+  <a href="../index.html" class="navbar__brand">VELORA <span>SUIT</span> HOTEL</a>
+  <ul class="navbar__nav">
+    <li><a href="../index.html">Ana Sayfa</a></li>
+    <li><a href="contact.html">İletişim</a></li>
+  </ul>
+  <button class="lang-btn" onclick="toggleLang()">EN</button>
+  <button class="darkmode-btn" aria-label="Temayı değiştir">🌙</button>
+  <button class="hamburger" aria-label="Toggle menu" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<ul class="mobile-nav" role="list">
+  <li><a href="../index.html">Ana Sayfa</a></li>
+  <li><a href="contact.html">İletişim</a></li>
+</ul>
+
+<div class="admin-layout">
+  <!-- Sidebar -->
+  <aside class="admin-sidebar">
+    <div class="sidebar-brand">
+      <h2>VELORA <span>SUIT</span></h2>
+      <p>Admin Paneli</p>
+    </div>
+    <ul class="sidebar-nav">
+      <li><a href="#" class="active"><span class="nav-icon">📋</span> Rezervasyonlar</a></li>
+      <li><a href="contact.html"><span class="nav-icon">📝</span> Rezervasyon Formu</a></li>
+      <li><a href="../index.html"><span class="nav-icon">🏨</span> Siteye Dön</a></li>
+      <li>
+        <button onclick="adminLogout()"><span class="nav-icon">🚪</span> Çıkış Yap</button>
+      </li>
+    </ul>
+  </aside>
+
+  <!-- Main content -->
+  <main class="admin-main">
+    <div class="admin-header">
+      <div>
+        <h1>Rezervasyonlar</h1>
+        <p class="admin-welcome" id="welcomeText">Hoş geldiniz</p>
+      </div>
+      <button class="btn btn-outline" onclick="clearAllReservations()" style="font-size:.75rem;padding:.6rem 1.2rem;"
+        data-tr="Tümünü Sil" data-en="Clear All">Tümünü Sil</button>
+    </div>
+
+    <!-- Stat kartları -->
+    <div class="stat-cards" id="statCards"></div>
+
+    <!-- Filtreler -->
+    <div class="table-controls">
+      <input type="text" class="search-box" id="searchBox"
+        placeholder="İsim, e-posta veya oda ara..." oninput="renderTable()">
+      <select class="filter-select" id="statusFilter" onchange="renderTable()">
+        <option value="">Tüm Durumlar</option>
+        <option value="Bekliyor">Bekliyor</option>
+        <option value="Onaylandı">Onaylandı</option>
+        <option value="İptal">İptal</option>
+      </select>
+      <select class="filter-select" id="roomFilter" onchange="renderTable()">
+        <option value="">Tüm Odalar</option>
+        <option value="queen">Queen Suite</option>
+        <option value="twin">Twin Oda</option>
+        <option value="deluxe">Deluxe Double</option>
+      </select>
+    </div>
+
+    <!-- Tablo -->
+    <div class="res-table-wrap">
+      <table class="res-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Ad Soyad</th>
+            <th>E-posta</th>
+            <th>Telefon</th>
+            <th>Oda</th>
+            <th>Giriş</th>
+            <th>Çıkış</th>
+            <th>Durum</th>
+            <th>Tarih</th>
+            <th>İşlem</th>
+          </tr>
+        </thead>
+        <tbody id="tableBody"></tbody>
+      </table>
+    </div>
+
+    <!-- Detay modal -->
+    <div class="detail-modal" id="detailModal">
+      <div class="detail-box">
+        <h3>📋 Rezervasyon Detayı</h3>
+        <div id="detailContent"></div>
+        <br>
+        <button class="btn btn-outline" onclick="closeDetail()"
+          style="width:100%;justify-content:center;">Kapat</button>
+      </div>
+    </div>
+
+    <!-- Toast -->
+    <div class="toast" id="toast"></div>
+  </main>
+</div>
+
+<script src="../assets/js/main.js"></script>
+<script>
+  // Admin koruması
+  if (!isAdmin()) {
+    window.location.href = 'login.html';
+  }
+
+  // Karşılama
+  const session = getSession();
+  if (session) {
+    document.getElementById('welcomeText').textContent =
+      'Hoş geldiniz, ' + session.name + ' 👋';
+  }
+
+  function adminLogout() {
+    clearSession();
+    window.location.href = 'login.html';
+  }
+
+  // Test verisi ekle (eğer boşsa)
+  function seedData() {
+    const list = JSON.parse(localStorage.getItem(RES_KEY) || '[]');
+    if (list.length === 0) {
+      const samples = [
+        { name:'Ahmet Yılmaz', email:'ahmet@email.com', phone:'+90 532 111 22 33', room:'queen',  checkin:'2025-05-10', checkout:'2025-05-14', message:'Balkon tercih ederim.', status:'Onaylandı', date:'26.04.2025 10:12', id:'R001' },
+        { name:'Elif Kaya',    email:'elif@email.com',  phone:'+90 541 222 33 44', room:'twin',   checkin:'2025-05-15', checkout:'2025-05-17', message:'',                   status:'Bekliyor',  date:'26.04.2025 11:30', id:'R002' },
+        { name:'Mehmet Demir', email:'mehmet@test.com', phone:'',                  room:'deluxe', checkin:'2025-06-01', checkout:'2025-06-05', message:'Geç check-in.',       status:'Bekliyor',  date:'26.04.2025 13:45', id:'R003' },
+        { name:'Selin Arslan', email:'selin@mail.com',  phone:'+90 555 444 55 66', room:'queen',  checkin:'2025-05-20', checkout:'2025-05-22', message:'',                   status:'İptal',     date:'25.04.2025 09:00', id:'R004' },
+      ];
+      localStorage.setItem(RES_KEY, JSON.stringify(samples));
+    }
+  }
+  seedData();
+
+  // Stat kartlarını güncelle
+  function renderStats() {
+    const list = JSON.parse(localStorage.getItem(RES_KEY) || '[]');
+    const wait    = list.filter(r => r.status === 'Bekliyor').length;
+    const confirm = list.filter(r => r.status === 'Onaylandı').length;
+    const cancel  = list.filter(r => r.status === 'İptal').length;
+
+    document.getElementById('statCards').innerHTML = `
+      <div class="stat-card">
+        <div class="stat-card__label">Toplam</div>
+        <div class="stat-card__value gold">${list.length}</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-card__label">Bekliyor</div>
+        <div class="stat-card__value orange">${wait}</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-card__label">Onaylandı</div>
+        <div class="stat-card__value green">${confirm}</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-card__label">İptal</div>
+        <div class="stat-card__value red">${cancel}</div>
+      </div>
+    `;
+  }
+
+  // Tablo render
+  function renderTable() {
+    const list    = JSON.parse(localStorage.getItem(RES_KEY) || '[]');
+    const search  = document.getElementById('searchBox').value.toLowerCase();
+    const status  = document.getElementById('statusFilter').value;
+    const room    = document.getElementById('roomFilter').value;
+
+    const roomLabel = { queen:'Queen Suite', twin:'Twin Oda', deluxe:'Deluxe Double' };
+    const badgeClass = { 'Bekliyor':'badge-wait', 'Onaylandı':'badge-confirm', 'İptal':'badge-cancel' };
+
+    const filtered = list.filter(r => {
+      const matchSearch = !search || [r.name, r.email, r.room, r.phone].join(' ').toLowerCase().includes(search);
+      const matchStatus = !status || r.status === status;
+      const matchRoom   = !room   || r.room === room;
+      return matchSearch && matchStatus && matchRoom;
+    });
+
+    const tbody = document.getElementById('tableBody');
+
+    if (filtered.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="10">
+        <div class="empty-state">
+          <div class="icon">📭</div>
+          <p>Gösterilecek rezervasyon bulunamadı.</p>
+        </div>
+      </td></tr>`;
+      return;
+    }
+
+    tbody.innerHTML = filtered.map((r, i) => `
+      <tr>
+        <td style="color:var(--clr-muted);font-size:.75rem;">${r.id || '#'}</td>
+        <td>
+          <button onclick="showDetail('${r.id}')"
+            style="background:none;border:none;color:var(--clr-cream);cursor:pointer;font-size:.83rem;text-align:left;padding:0;text-decoration:underline;text-underline-offset:3px;">
+            ${r.name}
+          </button>
+        </td>
+        <td style="color:var(--clr-muted);">${r.email}</td>
+        <td style="color:var(--clr-muted);">${r.phone || '—'}</td>
+        <td>${roomLabel[r.room] || r.room || '—'}</td>
+        <td style="color:var(--clr-muted);white-space:nowrap;">${r.checkin || '—'}</td>
+        <td style="color:var(--clr-muted);white-space:nowrap;">${r.checkout || '—'}</td>
+        <td>
+          <select class="status-select" onchange="updateStatus('${r.id}', this.value)">
+            <option value="Bekliyor"  ${r.status==='Bekliyor'  ? 'selected':''}>⏳ Bekliyor</option>
+            <option value="Onaylandı" ${r.status==='Onaylandı' ? 'selected':''}>✅ Onaylandı</option>
+            <option value="İptal"     ${r.status==='İptal'     ? 'selected':''}>❌ İptal</option>
+          </select>
+        </td>
+        <td style="color:var(--clr-muted);font-size:.75rem;white-space:nowrap;">${r.date || '—'}</td>
+        <td>
+          <button class="btn-delete" onclick="deleteRes('${r.id}')">Sil</button>
+        </td>
+      </tr>
+    `).join('');
+
+    renderStats();
+  }
+
+  function updateStatus(id, newStatus) {
+    const list = JSON.parse(localStorage.getItem(RES_KEY) || '[]');
+    const idx  = list.findIndex(r => r.id === id);
+    if (idx > -1) {
+      list[idx].status = newStatus;
+      localStorage.setItem(RES_KEY, JSON.stringify(list));
+      showToast('Durum güncellendi: ' + newStatus);
+      renderStats();
+    }
+  }
+
+  function deleteRes(id) {
+    if (!confirm('Bu rezervasyonu silmek istediğinize emin misiniz?')) return;
+    let list = JSON.parse(localStorage.getItem(RES_KEY) || '[]');
+    list = list.filter(r => r.id !== id);
+    localStorage.setItem(RES_KEY, JSON.stringify(list));
+    showToast('Rezervasyon silindi.');
+    renderTable();
+  }
+
+  function clearAllReservations() {
+    if (!confirm('TÜM rezervasyonları silmek istediğinize emin misiniz?')) return;
+    localStorage.removeItem(RES_KEY);
+    renderTable();
+    showToast('Tüm rezervasyonlar silindi.');
+  }
+
+  function showDetail(id) {
+    const list = JSON.parse(localStorage.getItem(RES_KEY) || '[]');
+    const r = list.find(r => r.id === id);
+    if (!r) return;
+    const roomLabel = { queen:'Queen Suite', twin:'Twin Oda', deluxe:'Deluxe Double' };
+    document.getElementById('detailContent').innerHTML = `
+      <div class="detail-row"><strong>ID</strong><span>${r.id}</span></div>
+      <div class="detail-row"><strong>Ad Soyad</strong><span>${r.name}</span></div>
+      <div class="detail-row"><strong>E-posta</strong><span>${r.email}</span></div>
+      <div class="detail-row"><strong>Telefon</strong><span>${r.phone || '—'}</span></div>
+      <div class="detail-row"><strong>Oda Tipi</strong><span>${roomLabel[r.room] || r.room}</span></div>
+      <div class="detail-row"><strong>Giriş Tarihi</strong><span>${r.checkin || '—'}</span></div>
+      <div class="detail-row"><strong>Çıkış Tarihi</strong><span>${r.checkout || '—'}</span></div>
+      <div class="detail-row"><strong>Durum</strong><span>${r.status}</span></div>
+      <div class="detail-row"><strong>Gönderim Tarihi</strong><span>${r.date || '—'}</span></div>
+      <div class="detail-row"><strong>Mesaj</strong><span>${r.message || '—'}</span></div>
+    `;
+    document.getElementById('detailModal').classList.add('open');
+  }
+
+  function closeDetail() {
+    document.getElementById('detailModal').classList.remove('open');
+  }
+
+  document.getElementById('detailModal').addEventListener('click', function(e) {
+    if (e.target === this) closeDetail();
+  });
+
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2800);
+  }
+
+  // İlk render
+  renderTable();
+  renderStats();
+</script>
+</body>
+</html>
