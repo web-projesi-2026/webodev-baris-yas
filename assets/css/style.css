@@ -1225,26 +1225,75 @@ body.light-mode {
   --clr-cream:   #1a1714;
   --clr-muted:   #5a524a;
   --clr-white:   #1a1714;
+  --shadow:      0 8px 40px rgba(0,0,0,0.12);
 }
 
+/* ── Navbar: açık temada yarı saydam bej ── */
 body.light-mode .navbar {
+  background: rgba(245,240,232,0.94) !important;
   border-bottom-color: var(--clr-border);
 }
+body.light-mode .navbar__brand       { color: #1a1714; }
+body.light-mode .navbar__brand span  { color: var(--clr-gold); }
+body.light-mode .navbar__nav a       { color: #5a524a; }
+body.light-mode .navbar__nav a:hover,
+body.light-mode .navbar__nav a.active { color: var(--clr-gold); }
+body.light-mode .lang-btn            { color: #5a524a; border-color: #d4ccc0; }
+body.light-mode .darkmode-btn        { color: #1a1714; border-color: #d4ccc0; }
 
+/* ── Hero ── */
 body.light-mode .hero__overlay {
-  background: linear-gradient(to top, rgba(245,240,232,0.75) 0%, rgba(245,240,232,0.2) 60%, transparent 100%);
+  background: linear-gradient(to top, rgba(30,24,18,0.72) 0%, rgba(0,0,0,0.15) 60%, transparent 100%);
 }
-
-body.light-mode .hero__title { color: #1a1714; }
+body.light-mode .hero__title  { color: #fff; }
 body.light-mode .hero__eyebrow { color: var(--clr-gold); }
-body.light-mode .hero__sub { color: #3a3028; }
+body.light-mode .hero__sub    { color: rgba(255,255,255,0.82); }
 
+/* ── Mobile nav ── */
 body.light-mode .mobile-nav {
   background: rgba(245,240,232,0.98);
 }
 body.light-mode .mobile-nav a { color: #1a1714; }
-
 body.light-mode .hamburger span { background: #1a1714; }
+
+/* ── Kartlar / Gölgeler ── */
+body.light-mode .room-card {
+  box-shadow: 0 2px 16px rgba(0,0,0,0.08);
+}
+body.light-mode .room-card:hover {
+  box-shadow: 0 8px 32px rgba(0,0,0,0.14);
+}
+body.light-mode .lightbox__img-wrap img {
+  box-shadow: 0 24px 80px rgba(0,0,0,0.25);
+}
+body.light-mode .lightbox {
+  background: rgba(245,240,232,0.95);
+}
+body.light-mode .lightbox__close,
+body.light-mode .lightbox__nav {
+  background: rgba(245,240,232,0.85);
+  border-color: #d4ccc0;
+  color: #1a1714;
+}
+body.light-mode .lightbox__caption { color: #5a524a; }
+body.light-mode .lightbox__counter { color: #5a524a; }
+
+/* ── Info strip renkleri değişmez (altın bg) ── */
+/* ── Footer ── */
+body.light-mode .footer { background: #e8e2d8; }
+body.light-mode .footer__brand,
+body.light-mode .footer__copy,
+body.light-mode .footer__links a { color: #5a524a; }
+body.light-mode .footer__brand span { color: var(--clr-gold); }
+
+/* ── Accordion ── */
+body.light-mode .accordion__trigger { background: #ede8de; color: #1a1714; }
+body.light-mode .accordion__trigger:hover { background: rgba(197,165,90,0.1); }
+body.light-mode .accordion__item.open .accordion__trigger { background: rgba(197,165,90,0.1); }
+body.light-mode .accordion__body { background: #f5f0e8; }
+
+/* ── Scroll top btn ── */
+body.light-mode .scroll-top-btn { box-shadow: 0 4px 20px rgba(197,165,90,0.3); }
 
 /* Dark mode button */
 .darkmode-btn {
@@ -1415,4 +1464,16 @@ body.light-mode .hamburger span { background: #1a1714; }
 
 @media (max-width: 768px) {
   .tab-btn { padding: 0.85rem 1.2rem; font-size: 0.72rem; }
+}
+
+/* ── Admin footer butonu ── */
+.admin-footer-btn {
+  opacity: 0.45;
+  font-size: 0.7rem !important;
+  letter-spacing: 0.08em;
+  transition: opacity var(--transition), color var(--transition) !important;
+}
+.admin-footer-btn:hover {
+  opacity: 1;
+  color: var(--clr-gold) !important;
 }

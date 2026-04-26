@@ -388,3 +388,63 @@ document.addEventListener('DOMContentLoaded', () => setLang(currentLang));
 
   activateTab(0);
 })();
+
+// ── AUTH SİSTEMİ ─────────────────────────────
+const AUTH_KEY   = 'velora_auth';
+const USERS_KEY  = 'velora_users';
+const RES_KEY    = 'velora_reservations';
+
+// Admin hesabı varsayılan olarak oluştur
+(function initAuth() {
+  const users = JSON.parse(localStorage.getItem(USERS_KEY) || '[]');
+  if (!users.find(u => u.email === 'admin@velora.com')) {
+    users.push({
+      id: 'admin',
+      name: 'Admin',
+      email: 'admin@velora.com',
+      password: 'admin123',
+      role: 'admin',
+      createdAt: new Date().toISOString()
+    });
+    localStorage.setItem(USERS_KEY, JSON.stringify(users));
+  }
+})();
+
+function getSession()  { return JSON.parse(localStorage.getItem(AUTH_KEY) || 'null'); }
+function setSession(u) { localStorage.setItem(AUTH_KEY, JSON.stringify(u)); }
+function clearSession(){ localStorage.removeItem(AUTH_KEY); }
+function isAdmin()     { const s = getSession(); return s && s.role === 'admin'; }
+
+// Navbar'a oturum butonu ekle
+(function renderAuthBtn() {
+  const nav = document.querySelector('.navbar__nav');
+  if (!nav) return;
+  const session = getSession();
+  const li = document.createElement('li');
+  if (session) {
+    li.innerHTML = `<a href="#" id="logoutNavBtn" title="${session.name}">👤 Çıkış</a>`;
+    li.querySelector('#logoutNavBtn').addEventListener('click', e => {
+      e.preventDefault();
+      clearSession();
+      window.location.href = getBasePath() + 'pages/login.html';
+    });
+  } else {
+    li.innerHTML = `<a href="${getBasePath()}pages/login.html" data-tr="Giriş Yap" data-en="Login">Giriş Yap</a>`;
+  }
+  nav.appendChild(li);
+})();
+
+function getBasePath() {
+  const path = window.location.pathname;
+  return path.includes('/pages/') ? '../' : '';
+}
+
+// Rezervasyon kaydet (contact.html'den çağrılır)
+function saveReservation(data) {
+  const list = JSON.parse(localStorage.getItem(RES_KEY) || '[]');
+  data.id     = 'R' + Date.now();
+  data.status = 'Bekliyor';
+  data.date   = new Date().toLocaleString('tr-TR');
+  list.unshift(data);
+  localStorage.setItem(RES_KEY, JSON.stringify(list));
+}
