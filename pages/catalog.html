@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Velora Suit Hotel — Oda Kataloğu">
+  <meta name="theme-color" content="#0d0c0b">
+  <title>Oda Kataloğu — Velora Suit Hotel</title>
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <style>
+    .catalog-filters{display:flex;align-items:center;gap:.8rem;flex-wrap:wrap;margin-bottom:2rem;}
+    .filter-btn{padding:.5rem 1.2rem;border-radius:20px;border:1px solid var(--clr-border);background:transparent;color:var(--clr-muted);font-family:var(--ff-body);font-size:.75rem;font-weight:500;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;transition:var(--transition);}
+    .filter-btn:hover{border-color:var(--clr-gold);color:var(--clr-gold);}
+    .filter-btn.active{background:var(--clr-gold);border-color:var(--clr-gold);color:#0d0c0b;}
+    .catalog-sort{background:var(--clr-surface);border:1px solid var(--clr-border);border-radius:var(--radius);padding:.5rem 1rem;color:var(--clr-muted);font-family:var(--ff-body);font-size:.78rem;outline:none;cursor:pointer;-webkit-appearance:none;}
+    .catalog-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:1.8rem;}
+    .catalog-card{background:var(--clr-surface);border:1px solid var(--clr-border);border-radius:var(--radius);overflow:hidden;display:flex;flex-direction:column;transition:transform var(--transition),box-shadow var(--transition);position:relative;}
+    .catalog-card:hover{transform:translateY(-5px);box-shadow:0 16px 48px rgba(0,0,0,.4);}
+    .card-badge{position:absolute;top:1rem;left:1rem;z-index:2;background:var(--clr-gold);color:#0d0c0b;font-size:.62rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;padding:.25rem .7rem;border-radius:20px;}
+    .fav-btn{position:absolute;top:1rem;right:1rem;z-index:10;width:38px;height:38px;border-radius:50%;background:rgba(13,12,11,.65);backdrop-filter:blur(4px);border:1px solid rgba(255,255,255,.15);font-size:1.1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background var(--transition),transform var(--transition);line-height:1;}
+    .fav-btn:hover{background:rgba(197,165,90,.85);transform:scale(1.1);}
+    .fav-btn.active{background:var(--clr-gold);border-color:var(--clr-gold);}
+    .catalog-card__img{height:220px;overflow:hidden;position:relative;}
+    .catalog-card__img img{width:100%;height:100%;object-fit:cover;transition:transform .55s ease;cursor:zoom-in;display:block;}
+    .catalog-card:hover .catalog-card__img img{transform:scale(1.05);}
+    .catalog-card__body{padding:1.6rem;flex:1;display:flex;flex-direction:column;gap:.5rem;}
+    .card-type{font-size:.65rem;font-weight:500;letter-spacing:.2em;text-transform:uppercase;color:var(--clr-gold);}
+    .card-name{font-family:var(--ff-display);font-size:1.4rem;color:var(--clr-cream);font-weight:300;line-height:1.2;}
+    .card-desc{font-size:.83rem;color:var(--clr-muted);line-height:1.65;flex:1;}
+    .card-features{display:flex;flex-wrap:wrap;gap:.4rem;margin-top:.4rem;}
+    .card-feature{font-size:.67rem;color:var(--clr-muted);background:rgba(255,255,255,.04);border:1px solid var(--clr-border);border-radius:3px;padding:.2rem .5rem;}
+    .card-meta{display:flex;gap:1.2rem;flex-wrap:wrap;padding-top:1rem;border-top:1px solid var(--clr-border);margin-top:.5rem;}
+    .card-meta span{font-size:.75rem;color:var(--clr-muted);}
+    .catalog-card__footer{padding:1rem 1.6rem 1.4rem;display:flex;align-items:center;justify-content:space-between;gap:.8rem;border-top:1px solid var(--clr-border);}
+    .card-price{display:flex;flex-direction:column;}
+    .card-price__amount{font-family:var(--ff-display);font-size:1.5rem;color:var(--clr-gold);line-height:1;}
+    .card-price__label{font-size:.65rem;color:var(--clr-muted);letter-spacing:.08em;}
+    .card-price__free{font-size:.75rem;color:var(--clr-muted);font-style:italic;}
+    .fav-counter{display:inline-flex;align-items:center;gap:.5rem;padding:.5rem 1rem;background:rgba(197,165,90,.1);border:1px solid rgba(197,165,90,.3);border-radius:20px;font-size:.78rem;color:var(--clr-gold);cursor:pointer;transition:var(--transition);text-decoration:none;}
+    .fav-counter:hover{background:rgba(197,165,90,.2);}
+    .fav-counter__num{background:var(--clr-gold);color:#0d0c0b;width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700;}
+    .empty-catalog{grid-column:1/-1;text-align:center;padding:5rem 2rem;color:var(--clr-muted);}
+    .empty-catalog .icon{font-size:3rem;margin-bottom:1rem;}
+    .fav-toast{position:fixed;bottom:5.5rem;right:2rem;z-index:3000;background:var(--clr-surface);border:1px solid var(--clr-gold);color:var(--clr-gold);padding:.75rem 1.4rem;border-radius:var(--radius);font-size:.82rem;transform:translateY(20px);opacity:0;transition:transform .3s ease,opacity .3s ease;pointer-events:none;}
+    .fav-toast.show{transform:translateY(0);opacity:1;}
+    @media(max-width:768px){.catalog-sort{margin-left:0;width:100%;}.catalog-grid{grid-template-columns:1fr;}}
+  </style>
+</head>
+<body>
+
+<nav class="navbar" role="navigation">
+  <a href="../index.html" class="navbar__brand">VELORA <span>SUIT</span> HOTEL</a>
+  <ul class="navbar__nav">
+    <li><a href="../index.html" data-tr="Ana Sayfa" data-en="Home">Ana Sayfa</a></li>
+    <li><a href="rooms.html" data-tr="Odalar" data-en="Rooms">Odalar</a></li>
+    <li><a href="catalog.html" class="active" data-tr="Katalog" data-en="Catalog">Katalog</a></li>
+    <li><a href="amenities.html" data-tr="Olanaklar" data-en="Amenities">Olanaklar</a></li>
+    <li><a href="contact.html" data-tr="İletişim" data-en="Contact">İletişim</a></li>
+  </ul>
+  <button class="lang-btn" onclick="toggleLang()">EN</button>
+  <button class="darkmode-btn" aria-label="Temayı değiştir">🌙</button>
+  <button class="hamburger" aria-label="Toggle menu" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<ul class="mobile-nav" role="list">
+  <li><a href="../index.html" data-tr="Ana Sayfa" data-en="Home">Ana Sayfa</a></li>
+  <li><a href="rooms.html" data-tr="Odalar" data-en="Rooms">Odalar</a></li>
+  <li><a href="catalog.html" data-tr="Katalog" data-en="Catalog">Katalog</a></li>
+  <li><a href="amenities.html" data-tr="Olanaklar" data-en="Amenities">Olanaklar</a></li>
+  <li><a href="contact.html" data-tr="İletişim" data-en="Contact">İletişim</a></li>
+</ul>
+
+<div class="page-hero">
+  <p class="section-label" data-tr="JSON Veriden Dinamik Listeleme" data-en="Dynamic Listing from JSON">JSON Veriden Dinamik Listeleme</p>
+  <h1 data-tr-html="Oda <em>Kataloğu</em>" data-en-html="Room <em>Catalog</em>">Oda <em>Kataloğu</em></h1>
+  <p data-tr="Tüm oda ve alanlarımızı keşfedin, beğendiklerinizi favorilerinize ekleyin." data-en="Explore all our rooms and areas, add your favorites to the list.">Tüm oda ve alanlarımızı keşfedin, beğendiklerinizi favorilerinize ekleyin.</p>
+  <p class="breadcrumb">
+    <a href="../index.html" data-tr="Ana Sayfa" data-en="Home">Ana Sayfa</a>
+    <span>/</span>
+    <span data-tr="Katalog" data-en="Catalog">Katalog</span>
+  </p>
+</div>
+
+<section class="section">
+  <div class="container">
+
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;margin-bottom:2rem;">
+      <div class="catalog-filters" id="filterBar">
+        <button class="filter-btn active" id="f-all">Tümü</button>
+        <button class="filter-btn" id="f-suite">Suite</button>
+        <button class="filter-btn" id="f-standard">Standart</button>
+        <button class="filter-btn" id="f-deluxe">Deluxe</button>
+        <button class="filter-btn" id="f-common">Ortak Alan</button>
+        <select class="catalog-sort" id="sortSelect">
+          <option value="default">Varsayılan Sıra</option>
+          <option value="price-asc">Fiyat: Düşük → Yüksek</option>
+          <option value="price-desc">Fiyat: Yüksek → Düşük</option>
+        </select>
+      </div>
+      <a href="favorites.html" class="fav-counter" id="favCounter">
+        ❤️ Favorilerim
+        <span class="fav-counter__num" id="favCount">0</span>
+      </a>
+    </div>
+
+    <div class="catalog-grid" id="catalogGrid"></div>
+
+  </div>
+</section>
+
+<div class="fav-toast" id="favToast"></div>
+
+<footer class="footer">
+  <div class="footer__inner">
+    <div class="footer__brand">VELORA <span>SUIT</span> HOTEL</div>
+    <p class="footer__copy" data-tr="© 2025 Velora Suit Hotel. Tüm hakları saklıdır." data-en="© 2025 Velora Suit Hotel. All rights reserved.">© 2025 Velora Suit Hotel. Tüm hakları saklıdır.</p>
+    <ul class="footer__links">
+      <li><a href="../index.html" data-tr="Ana Sayfa" data-en="Home">Ana Sayfa</a></li>
+      <li><a href="rooms.html" data-tr="Odalar" data-en="Rooms">Odalar</a></li>
+      <li><a href="amenities.html" data-tr="Olanaklar" data-en="Amenities">Olanaklar</a></li>
+      <li><a href="contact.html" data-tr="İletişim" data-en="Contact">İletişim</a></li>
+      <li><a href="login.html" class="admin-footer-btn">🔐 Admin</a></li>
+    </ul>
+  </div>
+</footer>
+
+<script src="../assets/js/main.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+
+  var FAV_KEY = 'velora_favorites';
+  var activeFilter = 'all';
+
+  var ROOMS = [
+    { id:'queen-suite',   cat:'suite',    type:'Suite Oda',    type_en:'Suite Room',    name:'Queen Suite',            name_en:'Queen Suite',            desc:'Velora markalı nevresim, LED asma tavan ve özel dekorasyonuyla en prestijli odamız. Queen yatak ve tam donanımlı banyo.',               desc_en:'Our most prestigious room with Velora-branded bedding, LED ceiling and private decor. Queen bed and full bathroom.',    img:'../assets/img/hero-room.jpg',    price:1800, size:60, cap:2, bed:'1 Queen Yatak',  bed_en:'1 Queen Bed',    feat:['Wi-Fi','LED Tavan','Özel Banyo','Smart TV'],   badge:'En Popüler', badge_en:'Most Popular' },
+    { id:'twin-room',     cat:'standard', type:'Standart Oda', type_en:'Standard Room', name:'Twin Oda',               name_en:'Twin Room',              desc:'İki ayrı tek kişilik yatakla arkadaş ve aile grupları için ideal. Gardırop ve okuma lambası mevcut.',                               desc_en:'Ideal for friends or families with two separate single beds. Wardrobe and reading lamps included.',                      img:'../assets/img/twin-room.jpg',    price:1400, size:60, cap:2, bed:'2 Tek Yatak',    bed_en:'2 Single Beds',  feat:['Wi-Fi','LED Tavan','Özel Banyo','Gardırop'],   badge:null,          badge_en:null          },
+    { id:'deluxe-double', cat:'deluxe',   type:'Deluxe Oda',   type_en:'Deluxe Room',   name:'Deluxe Double',          name_en:'Deluxe Double',          desc:'Geniş çift kişilik yatak ve LED asma tavan aydınlatmasıyla romantik ya da uzun konaklamalar için lüks oda.',                       desc_en:'Luxury room for romantic or extended stays with spacious double bed and LED ceiling.',                                   img:'../assets/img/double-room.jpg',  price:1600, size:60, cap:2, bed:'1 Çift Yatak',   bed_en:'1 Double Bed',   feat:['Wi-Fi','LED Tavan','Özel Banyo','Dolap'],      badge:'Öne Çıkan',   badge_en:'Featured'    },
+    { id:'living-area',   cat:'common',   type:'Ortak Alan',   type_en:'Common Area',   name:'Yaşam Alanı',            name_en:'Living Area',            desc:'L tipi kadife kanepe, duvara monte Smart TV ve LED asma tavan. Misafir için çekyat da mevcuttur.',                                desc_en:'L-shaped velvet sofa, wall-mounted Smart TV and LED ceiling. Pull-out sofa bed available for guests.',                  img:'../assets/img/living-room.jpg',  price:null, size:25, cap:1, bed:'1 Çekyat',       bed_en:'1 Sofa Bed',     feat:['Smart TV','L Kanepe','LED Tavan','Netflix'],   badge:null,          badge_en:null          },
+    { id:'kitchen',       cat:'common',   type:'Ortak Alan',   type_en:'Common Area',   name:'Tam Donanımlı Mutfak',   name_en:'Fully Equipped Kitchen', desc:'Beyaz lake dolaplı mermer tezgâhlı mutfak. Gaz ocak, su ısıtıcı ve buzdolabı mevcuttur.',                                         desc_en:'White gloss cabinets with marble countertop. Gas stove, kettle and refrigerator.',                                      img:'../assets/img/kitchen.jpg',      price:null, size:12, cap:null, bed:null, bed_en:null, feat:['Gaz Ocak','Buzdolabı','Su Isıtıcı','Aspiratör'], badge:null,         badge_en:null          },
+    { id:'bathroom',      cat:'common',   type:'Ortak Alan',   type_en:'Common Area',   name:'Özel Banyo',             name_en:'Private Bathroom',       desc:'Siyah çerçeveli cam kabin duş, duvara monte klozet ve beyaz mermer fayans kaplama. Havlu dahildir.',                               desc_en:'Black-framed glass shower, wall-mounted toilet and white marble tiles. Towels included.',                               img:'../assets/img/bathroom.jpg',     price:null, size:8,  cap:null, bed:null, bed_en:null, feat:['Cam Duş','Havlu','Saç Kurutma','Malzemeler'],  badge:null,          badge_en:null          }
+  ];
+
+  // ── Favoriler ──────────────────────────────
+  function getFavs() {
+    try { return JSON.parse(localStorage.getItem(FAV_KEY) || '[]'); }
+    catch(e) { return []; }
+  }
+
+  function toggleFav(id) {
+    var favs = getFavs();
+    var idx = favs.indexOf(id);
+    var added;
+    if (idx > -1) { favs.splice(idx, 1); added = false; }
+    else          { favs.push(id);        added = true;  }
+    localStorage.setItem(FAV_KEY, JSON.stringify(favs));
+    updateFavCount();
+    showToast(added ? '❤️ Favorilere eklendi!' : '💔 Favorilerden çıkarıldı');
+    var btn = document.querySelector('.fav-btn[data-id="' + id + '"]');
+    if (btn) {
+      btn.classList.toggle('active', added);
+      btn.textContent = added ? '❤️' : '🤍';
+    }
+  }
+  window.toggleFav = toggleFav;
+
+  function updateFavCount() {
+    var el = document.getElementById('favCount');
+    if (el) el.textContent = getFavs().length;
+  }
+
+  function showToast(msg) {
+    var t = document.getElementById('favToast');
+    if (!t) return;
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(function(){ t.classList.remove('show'); }, 2500);
+  }
+
+  // ── Kart render ────────────────────────────
+  function renderCards(rooms) {
+    var lang = (typeof currentLang !== 'undefined') ? currentLang : 'tr';
+    var grid = document.getElementById('catalogGrid');
+    var favs = getFavs();
+
+    if (!rooms.length) {
+      grid.innerHTML = '<div class="empty-catalog"><div class="icon">🔍</div><p>Bu kategoride oda bulunamadı.</p></div>';
+      return;
+    }
+
+    var html = '';
+    for (var i = 0; i < rooms.length; i++) {
+      var r = rooms[i];
+      var name  = lang === 'en' ? r.name_en  : r.name;
+      var type  = lang === 'en' ? r.type_en  : r.type;
+      var desc  = lang === 'en' ? r.desc_en  : r.desc;
+      var badge = lang === 'en' ? r.badge_en : r.badge;
+      var feat  = r.feat;
+      var bed   = lang === 'en' ? r.bed_en   : r.bed;
+      var faved = favs.indexOf(r.id) > -1;
+
+      var badgeHtml = badge ? '<span class="card-badge">' + badge + '</span>' : '';
+
+      var priceHtml = r.price
+        ? '<div class="card-price"><span class="card-price__amount">&#8378;' + r.price.toLocaleString('tr-TR') + '</span><span class="card-price__label">' + (lang === 'tr' ? 'gecelik' : 'per night') + '</span></div>'
+        : '<span class="card-price__free">' + (lang === 'tr' ? 'Oda dahil' : 'Included') + '</span>';
+
+      var featHtml = '';
+      for (var f = 0; f < Math.min(feat.length, 4); f++) {
+        featHtml += '<span class="card-feature">' + feat[f] + '</span>';
+      }
+
+      var metaHtml = '';
+      if (r.size)  metaHtml += '<span>📐 ' + r.size + ' m²</span>';
+      if (r.cap)   metaHtml += '<span>👤 ' + r.cap + ' ' + (lang === 'tr' ? 'kişi' : 'guests') + '</span>';
+      if (bed)     metaHtml += '<span>🛏 ' + bed + '</span>';
+
+      html += '<div class="catalog-card" data-id="' + r.id + '">' +
+        badgeHtml +
+        '<button class="fav-btn ' + (faved ? 'active' : '') + '" data-id="' + r.id + '" onclick="toggleFav(\'' + r.id + '\')" aria-label="Favoriye ekle">' + (faved ? '❤️' : '🤍') + '</button>' +
+        '<div class="catalog-card__img img-trigger"><img src="' + r.img + '" alt="' + name + '" loading="lazy"></div>' +
+        '<div class="catalog-card__body">' +
+          '<p class="card-type">' + type + '</p>' +
+          '<h3 class="card-name">' + name + '</h3>' +
+          '<p class="card-desc">' + desc + '</p>' +
+          '<div class="card-features">' + featHtml + '</div>' +
+          '<div class="card-meta">' + metaHtml + '</div>' +
+        '</div>' +
+        '<div class="catalog-card__footer">' +
+          priceHtml +
+          '<a href="contact.html" class="btn btn-primary" style="font-size:.72rem;padding:.65rem 1.2rem;">' + (lang === 'tr' ? 'Rezervasyon' : 'Book Now') + '</a>' +
+        '</div>' +
+      '</div>';
+    }
+    grid.innerHTML = html;
+  }
+
+  // ── Filtre ─────────────────────────────────
+  function applyFilter() {
+    var sort = document.getElementById('sortSelect').value;
+    var filtered = ROOMS.filter(function(r) {
+      return activeFilter === 'all' || r.cat === activeFilter;
+    });
+    if (sort === 'price-asc')  filtered.sort(function(a,b){ return (a.price||9999)-(b.price||9999); });
+    if (sort === 'price-desc') filtered.sort(function(a,b){ return (b.price||0)-(a.price||0); });
+    renderCards(filtered);
+  }
+
+  // Filtre butonları
+  var filterMap = { 'f-all':'all', 'f-suite':'suite', 'f-standard':'standard', 'f-deluxe':'deluxe', 'f-common':'common' };
+  Object.keys(filterMap).forEach(function(btnId) {
+    var btn = document.getElementById(btnId);
+    if (!btn) return;
+    btn.addEventListener('click', function() {
+      document.querySelectorAll('.filter-btn').forEach(function(b){ b.classList.remove('active'); });
+      btn.classList.add('active');
+      activeFilter = filterMap[btnId];
+      applyFilter();
+    });
+  });
+
+  document.getElementById('sortSelect').addEventListener('change', applyFilter);
+
+  // ── İlk yükleme ────────────────────────────
+  updateFavCount();
+  applyFilter();
+
+}); // DOMContentLoaded sonu
+</script>
+</body>
+</html>

@@ -450,10 +450,10 @@
     const list = JSON.parse(localStorage.getItem(RES_KEY) || '[]');
     if (list.length === 0) {
       const samples = [
-        { name:'Ahmet Yılmaz', email:'ahmet@email.com', phone:'+90 532 111 22 33', room:'queen',  checkin:'2025-05-10', checkout:'2025-05-14', message:'Balkon tercih ederim.', status:'Onaylandı', date:'26.04.2025 10:12', id:'R001' },
-        { name:'Elif Kaya',    email:'elif@email.com',  phone:'+90 541 222 33 44', room:'twin',   checkin:'2025-05-15', checkout:'2025-05-17', message:'',                   status:'Bekliyor',  date:'26.04.2025 11:30', id:'R002' },
-        { name:'Mehmet Demir', email:'mehmet@test.com', phone:'',                  room:'deluxe', checkin:'2025-06-01', checkout:'2025-06-05', message:'Geç check-in.',       status:'Bekliyor',  date:'26.04.2025 13:45', id:'R003' },
-        { name:'Selin Arslan', email:'selin@mail.com',  phone:'+90 555 444 55 66', room:'queen',  checkin:'2025-05-20', checkout:'2025-05-22', message:'',                   status:'İptal',     date:'25.04.2025 09:00', id:'R004' },
+        { name:'Ahmet Yılmaz', email:'ahmet@email.com', phone:'+90 532 111 22 33', room:'queen',  checkin:'2025-05-10', checkout:'2025-05-14', message:'Balkon tercih ederim.', status:'Bekliyor', date:'26.04.2025 10:12', id:'R001' },
+        { name:'Elif Kaya',    email:'elif@email.com',  phone:'+90 541 222 33 44', room:'twin',   checkin:'2025-05-15', checkout:'2025-05-17', message:'',                   status:'Bekliyor', date:'26.04.2025 11:30', id:'R002' },
+        { name:'Mehmet Demir', email:'mehmet@test.com', phone:'',                  room:'deluxe', checkin:'2025-06-01', checkout:'2025-06-05', message:'Geç check-in.',       status:'Bekliyor', date:'26.04.2025 13:45', id:'R003' },
+        { name:'Selin Arslan', email:'selin@mail.com',  phone:'+90 555 444 55 66', room:'queen',  checkin:'2025-05-20', checkout:'2025-05-22', message:'',                   status:'Bekliyor', date:'25.04.2025 09:00', id:'R004' },
       ];
       localStorage.setItem(RES_KEY, JSON.stringify(samples));
     }
