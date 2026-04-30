@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Velora Suit Hotel — Favori odalarım">
+  <meta name="theme-color" content="#0d0c0b">
+  <title>Favorilerim — Velora Suit Hotel</title>
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <style>
+    .fav-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1.8rem;
+    }
+    .fav-card {
+      background: var(--clr-surface);
+      border: 1px solid var(--clr-border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: transform var(--transition), box-shadow var(--transition);
+    }
+    .fav-card:hover { transform: translateY(-4px); box-shadow: 0 12px 40px rgba(0,0,0,0.35); }
+    .fav-card__img { height: 200px; overflow: hidden; position: relative; }
+    .fav-card__img img { width:100%; height:100%; object-fit:cover; cursor:zoom-in; }
+    .fav-card__body { padding: 1.4rem; flex:1; display:flex; flex-direction:column; gap:.4rem; }
+    .fav-card__type { font-size:.65rem; font-weight:500; letter-spacing:.2em; text-transform:uppercase; color:var(--clr-gold); }
+    .fav-card__name { font-family:var(--ff-display); font-size:1.3rem; color:var(--clr-cream); font-weight:300; }
+    .fav-card__desc { font-size:.82rem; color:var(--clr-muted); line-height:1.65; flex:1; }
+    .fav-card__footer {
+      padding: .9rem 1.4rem 1.2rem;
+      border-top: 1px solid var(--clr-border);
+      display:flex; align-items:center; justify-content:space-between; gap:.8rem;
+    }
+    .fav-price { font-family:var(--ff-display); font-size:1.3rem; color:var(--clr-gold); }
+    .fav-price small { font-family:var(--ff-body); font-size:.65rem; color:var(--clr-muted); display:block; }
+    .btn-remove {
+      background:transparent; border:1px solid rgba(224,90,90,0.35); color:#e05a5a;
+      border-radius:var(--radius); padding:.4rem .9rem; font-size:.72rem; cursor:pointer;
+      transition:background .2s;
+    }
+    .btn-remove:hover { background:rgba(224,90,90,0.12); }
+    .empty-favs { text-align:center; padding:5rem 2rem; color:var(--clr-muted); }
+    .empty-favs .icon { font-size:4rem; margin-bottom:1rem; }
+    .empty-favs h2 { font-size:1.5rem; color:var(--clr-cream); margin-bottom:.8rem; }
+    .fav-header { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:1rem; margin-bottom:2.5rem; }
+    .fav-header h2 { font-size:1.8rem; color:var(--clr-cream); }
+    .fav-count { font-size:.82rem; color:var(--clr-muted); }
+    .btn-clear-all { font-size:.72rem; padding:.5rem 1rem; }
+  </style>
+</head>
+<body>
+
+<nav class="navbar" role="navigation">
+  <a href="../index.html" class="navbar__brand">VELORA <span>SUIT</span> HOTEL</a>
+  <ul class="navbar__nav">
+    <li><a href="../index.html" data-tr="Ana Sayfa" data-en="Home">Ana Sayfa</a></li>
+    <li><a href="rooms.html" data-tr="Odalar" data-en="Rooms">Odalar</a></li>
+    <li><a href="catalog.html" data-tr="Katalog" data-en="Catalog">Katalog</a></li>
+    <li><a href="amenities.html" data-tr="Olanaklar" data-en="Amenities">Olanaklar</a></li>
+    <li><a href="contact.html" data-tr="İletişim" data-en="Contact">İletişim</a></li>
+  </ul>
+  <button class="lang-btn" onclick="toggleLang()">EN</button>
+  <button class="darkmode-btn" aria-label="Temayı değiştir">🌙</button>
+  <button class="hamburger" aria-label="Toggle menu" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<ul class="mobile-nav" role="list">
+  <li><a href="../index.html" data-tr="Ana Sayfa" data-en="Home">Ana Sayfa</a></li>
+  <li><a href="catalog.html" data-tr="Katalog" data-en="Catalog">Katalog</a></li>
+  <li><a href="contact.html" data-tr="İletişim" data-en="Contact">İletişim</a></li>
+</ul>
+
+<div class="page-hero">
+  <p class="section-label" data-tr="localStorage'dan Okunan Veriler" data-en="Data from localStorage">localStorage'dan Okunan Veriler</p>
+  <h1 data-tr-html="❤️ <em>Favorilerim</em>" data-en-html="❤️ My <em>Favorites</em>">❤️ <em>Favorilerim</em></h1>
+  <p data-tr="Beğendiğiniz odaları buradan takip edebilirsiniz." data-en="Keep track of the rooms you liked here.">Beğendiğiniz odaları buradan takip edebilirsiniz.</p>
+  <p class="breadcrumb">
+    <a href="../index.html" data-tr="Ana Sayfa" data-en="Home">Ana Sayfa</a>
+    <span>/</span>
+    <a href="catalog.html" data-tr="Katalog" data-en="Catalog">Katalog</a>
+    <span>/</span>
+    <span data-tr="Favorilerim" data-en="Favorites">Favorilerim</span>
+  </p>
+</div>
+
+<section class="section">
+  <div class="container">
+    <div class="fav-header">
+      <div>
+        <h2 data-tr-html="Kayıtlı <em>Odalar</em>" data-en-html="Saved <em>Rooms</em>">Kayıtlı <em>Odalar</em></h2>
+        <p class="fav-count" id="favCountText"></p>
+      </div>
+      <div style="display:flex; gap:.8rem; flex-wrap:wrap; align-items:center;">
+        <a href="catalog.html" class="btn btn-outline btn-clear-all"
+          data-tr="← Kataloğa Dön" data-en="← Back to Catalog">← Kataloğa Dön</a>
+        <button class="btn btn-outline btn-clear-all" onclick="clearAllFavs()"
+          style="border-color:rgba(224,90,90,0.4);color:#e05a5a;"
+          data-tr="Tümünü Temizle" data-en="Clear All">Tümünü Temizle</button>
+      </div>
+    </div>
+    <div class="fav-grid" id="favGrid"></div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="footer__inner">
+    <div class="footer__brand">VELORA <span>SUIT</span> HOTEL</div>
+    <p class="footer__copy" data-tr="© 2025 Velora Suit Hotel. Tüm hakları saklıdır." data-en="© 2025 Velora Suit Hotel. All rights reserved.">© 2025 Velora Suit Hotel. Tüm hakları saklıdır.</p>
+    <ul class="footer__links">
+      <li><a href="../index.html" data-tr="Ana Sayfa" data-en="Home">Ana Sayfa</a></li>
+      <li><a href="catalog.html" data-tr="Katalog" data-en="Catalog">Katalog</a></li>
+      <li><a href="contact.html" data-tr="İletişim" data-en="Contact">İletişim</a></li>
+      <li><a href="login.html" class="admin-footer-btn">🔐 Admin</a></li>
+    </ul>
+  </div>
+</footer>
+
+<script src="../assets/js/main.js"></script>
+<script>
+const FAV_KEY = 'velora_favorites';
+
+const ROOMS_DATA = [
+  { id:"queen-suite",  type:"Suite Oda",    type_en:"Suite Room",    name:"Queen Suite",          name_en:"Queen Suite",            desc:"Velora markalı nevresim, LED asma tavan ve özel dekorasyonuyla en prestijli odamız.",                         desc_en:"Our most prestigious room with Velora-branded bedding, LED ceiling and private decor.",         img:"../assets/img/hero-room.jpg",    price:1800, currency:"₺" },
+  { id:"twin-room",    type:"Standart Oda", type_en:"Standard Room", name:"Twin Oda",             name_en:"Twin Room",              desc:"İki ayrı tek kişilik yatakla arkadaş ve aile grupları için ideal seçenek.",                                   desc_en:"Ideal for friends or families with two separate single beds.",                                  img:"../assets/img/twin-room.jpg",    price:1400, currency:"₺" },
+  { id:"deluxe-double",type:"Deluxe Oda",   type_en:"Deluxe Room",   name:"Deluxe Double",        name_en:"Deluxe Double",          desc:"Geniş çift kişilik yatak ve LED asma tavan aydınlatmasıyla romantik konaklamalar için lüks oda.",              desc_en:"Luxury room for romantic or extended stays with spacious double bed and LED ceiling.",           img:"../assets/img/double-room.jpg",  price:1600, currency:"₺" },
+  { id:"living-area",  type:"Ortak Alan",   type_en:"Common Area",   name:"Yaşam Alanı",          name_en:"Living Area",            desc:"L tipi kadife kanepe, duvara monte Smart TV ve LED asma tavanlı ferah oturma alanı.",                         desc_en:"Spacious living room with L-shaped velvet sofa, wall-mounted Smart TV and LED ceiling.",         img:"../assets/img/living-room.jpg",  price:null, currency:"₺" },
+  { id:"kitchen",      type:"Ortak Alan",   type_en:"Common Area",   name:"Tam Donanımlı Mutfak", name_en:"Fully Equipped Kitchen", desc:"Beyaz lake dolaplı, mermer tezgâhlı mutfak. Gaz ocak, su ısıtıcı ve buzdolabı mevcuttur.",                    desc_en:"White gloss cabinets with marble countertop, gas stove, kettle and refrigerator.",               img:"../assets/img/kitchen.jpg",      price:null, currency:"₺" },
+  { id:"bathroom",     type:"Ortak Alan",   type_en:"Common Area",   name:"Özel Banyo",           name_en:"Private Bathroom",       desc:"Siyah çerçeveli cam kabin duş, duvara monte klozet ve beyaz mermer fayans. Havlu dahildir.",                  desc_en:"Black-framed glass shower, wall-mounted toilet and white marble tiling. Towels included.",       img:"../assets/img/bathroom.jpg",     price:null, currency:"₺" }
+];
+
+function getFavs() { return JSON.parse(localStorage.getItem(FAV_KEY) || '[]'); }
+
+function removeFav(id) {
+  let favs = getFavs().filter(f => f !== id);
+  localStorage.setItem(FAV_KEY, JSON.stringify(favs));
+  renderFavs();
+}
+
+function clearAllFavs() {
+  if (!confirm(typeof currentLang !== 'undefined' && currentLang === 'en'
+    ? 'Remove all favorites?' : 'Tüm favoriler silinsin mi?')) return;
+  localStorage.removeItem(FAV_KEY);
+  renderFavs();
+}
+
+async function renderFavs() {
+  const lang   = typeof currentLang !== 'undefined' ? currentLang : 'tr';
+  const favIds = getFavs();
+  const grid   = document.getElementById('favGrid');
+  const countEl = document.getElementById('favCountText');
+
+  countEl.textContent = lang === 'tr'
+    ? `${favIds.length} oda kayıtlı`
+    : `${favIds.length} room${favIds.length !== 1 ? 's' : ''} saved`;
+
+  if (favIds.length === 0) {
+    grid.innerHTML = `<div class="empty-favs" style="grid-column:1/-1;">
+      <div class="icon">🤍</div>
+      <h2>${lang === 'tr' ? 'Henüz favori eklemediniz' : 'No favorites yet'}</h2>
+      <p style="margin-bottom:1.5rem;">${lang === 'tr' ? 'Katalogdan oda ekleyebilirsiniz.' : 'You can add rooms from the catalog.'}</p>
+      <a href="catalog.html" class="btn btn-primary">${lang === 'tr' ? 'Kataloğa Git →' : 'Go to Catalog →'}</a>
+    </div>`;
+    return;
+  }
+
+  const rooms = ROOMS_DATA.filter(r => favIds.includes(r.id));
+
+  grid.innerHTML = rooms.map(room => {
+    const name = lang === 'en' ? room.name_en : room.name;
+    const type = lang === 'en' ? room.type_en : room.type;
+    const desc = lang === 'en' ? room.desc_en : room.desc;
+
+    const priceHtml = room.price
+      ? `<div class="fav-price">${room.currency}${room.price.toLocaleString('tr-TR')}
+          <small>${lang === 'tr' ? 'gecelik' : 'per night'}</small>
+         </div>`
+      : `<span style="font-size:.75rem;color:var(--clr-muted);font-style:italic;">${lang === 'tr' ? 'Oda dahil' : 'Included'}</span>`;
+
+    return `
+    <div class="fav-card">
+      <div class="fav-card__img img-trigger">
+        <img src="${room.img}" alt="${name}" loading="lazy">
+      </div>
+      <div class="fav-card__body">
+        <p class="fav-card__type">${type}</p>
+        <h3 class="fav-card__name">${name}</h3>
+        <p class="fav-card__desc">${desc}</p>
+      </div>
+      <div class="fav-card__footer">
+        ${priceHtml}
+        <div style="display:flex; gap:.5rem;">
+          <button class="btn-remove" onclick="removeFav('${room.id}')">
+            ${lang === 'tr' ? '💔 Kaldır' : '💔 Remove'}
+          </button>
+          <a href="contact.html" class="btn btn-primary" style="font-size:.72rem;padding:.4rem .9rem;">
+            ${lang === 'tr' ? 'Rezervasyon' : 'Book'}
+          </a>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+renderFavs();
+</script>
+</body>
+</html>

@@ -119,6 +119,8 @@ velora/
 - [x] Anlık hata mesajları (blur eventi)
 - [x] Başarılı gönderim mesajı
 - [x] Karakter sayacı
+
+**Hafta 4 — Auth & Admin:**
 - [x] Giriş / Kayıt sistemi
 - [x] Admin paneli
 - [x] Rezervasyonlar admin'e düşüyor
@@ -128,6 +130,12 @@ velora/
 ## 🚀 Kurulum
 
 Herhangi bir kurulum gerektirmez. Projeyi klonlayıp `index.html` dosyasını tarayıcıda açman yeterli.
+
+```bash
+git clone https://github.com/kullanici-adin/velora-suit-hotel.git
+cd velora-suit-hotel
+# index.html dosyasını tarayıcıda aç
+```
 
 ---
 
