@@ -1,25 +1,28 @@
 # 🏨 Velora Suit Hotel — Web Sitesi
 
-> Nevşehir'de bulunan Velora Suit Hotel için geliştirilmiş çok sayfalı, responsive statik otel web sitesi.  
-> Üniversite ödevi kapsamında **vanilla HTML, CSS ve JavaScript** kullanılarak hazırlanmıştır.
+> Nevşehir'de bulunan Velora Suit Hotel için geliştirilmiş çok sayfalı, responsive otel web sitesi.  
+> Üniversite ödevi kapsamında **HTML, CSS, JavaScript, PHP ve MySQL** kullanılarak hazırlanmıştır.
 
 ---
 
 ## ✨ Özellikler
 
-- 🌐 **TR / EN Dil Desteği** — Tüm sayfa içeriği tek butonla değişiyor, tercih localStorage'a kaydediliyor
-- 🌙 **Dark / Light Mode** — Navbar'daki 🌙/☀️ butonu ile tema geçişi, tercih localStorage'a kaydediliyor
-- 🔍 **Görsel Lightbox** — Görsellere tıklayınca tam ekran açılıyor; ok tuşları, klavye ve swipe desteği
-- 🖼️ **Otomatik Slider** — Ana sayfada oda fotoğrafları arasında otomatik + manuel geçiş
-- 📑 **Sekmeli İçerik** — Odalar sayfasında oda tipleri sekme sistemiyle gösteriliyor
-- ❓ **SSS Accordion** — Olanaklar sayfasında açılır/kapanır sık sorulan sorular bölümü
-- ⬆️ **Yukarı Çık Butonu** — 300px scroll sonrası beliren, smooth scroll yapan buton
-- 🔢 **Sayaç Animasyonu** — Ana sayfada istatistikler ekrana girince animasyonlu sayar
-- 📱 **Hamburger Menü** — Mobilde overlay tarzı açılan navigasyon menüsü
-- 🗺️ **Google Maps Entegrasyonu** — Otelin gerçek konumunu gösteren gömülü harita
-- ✅ **Form Validasyonu** — Zorunlu alan kontrolü, e-posta format doğrulama, tarih mantığı, hata mesajları
-- 🔐 **Giriş / Kayıt Sistemi** — localStorage tabanlı kullanıcı auth sistemi
-- 🛡️ **Admin Paneli** — Rezervasyon takibi, durum güncelleme, filtreleme ve silme
+- 🌐 **TR / EN Dil Desteği** — Tüm sayfa içeriği tek butonla değişiyor
+- 🌙 **Dark / Light Mode** — Tema geçişi, tercih localStorage'a kaydediliyor
+- 🔍 **Görsel Lightbox** — Görsellere tıklayınca tam ekran, klavye ve swipe desteği
+- 🖼️ **Otomatik Slider** — Ana sayfada otomatik + manuel görsel geçişi
+- 📑 **Sekmeli İçerik** — Odalar sayfasında tab sistemi
+- ❓ **SSS Accordion** — Olanaklar sayfasında açılır/kapanır sorular
+- ⬆️ **Yukarı Çık Butonu** — Scroll sonrası beliren smooth scroll butonu
+- 🔢 **Sayaç Animasyonu** — İstatistikler ekrana girince animasyonlu sayar
+- 📱 **Hamburger Menü** — Mobilde overlay navigasyon
+- 🗺️ **Google Maps** — Otelin gerçek konumu gömülü harita
+- ✅ **Form Validasyonu** — Zorunlu alanlar, e-posta kontrolü, tarih mantığı
+- 🃏 **Dinamik Katalog** — JSON'dan okunan oda verileri, kart listeleme, filtreleme, sıralama
+- ❤️ **Favoriler** — Kullanıcı bazında localStorage favorileme
+- 💬 **Yorum Sistemi** — Giriş yapan kullanıcılar yorum yapabiliyor, MySQL'de saklanıyor
+- 🔐 **Giriş / Kayıt** — PHP + MySQL ile tam auth sistemi, oturum yönetimi
+- 🛡️ **Admin Paneli** — Rezervasyon takibi, durum güncelleme, arama, filtreleme, silme
 
 ---
 
@@ -27,19 +30,30 @@
 
 ```
 velora/
+├── setup.php                # İlk kurulum (bir kez çalıştır, sonra sil)
 ├── index.html               # Ana sayfa
+├── api/
+│   ├── config.php           # Veritabanı bağlantısı ve yardımcı fonksiyonlar
+│   ├── auth.php             # Kayıt, giriş, çıkış, oturum kontrolü
+│   ├── reservations.php     # Rezervasyon CRUD işlemleri
+│   └── comments.php         # Yorum ekleme, listeleme, silme
+├── sql/
+│   └── velora.sql           # Veritabanı şeması (phpMyAdmin ile import)
 ├── assets/
-│   ├── css/
-│   │   └── style.css        # Tüm stiller (dark/light mode, responsive, animasyonlar)
+│   ├── css/style.css        # Tüm stiller
 │   ├── js/
-│   │   └── main.js          # Tüm JS etkileşimleri + auth sistemi
-│   └── img/                 # Oda görselleri
+│   │   ├── main.js          # UI etkileşimleri
+│   │   └── api.js           # PHP API wrapper, oturum yönetimi
+│   ├── data/rooms.json      # Oda verileri (JSON)
+│   └── img/                 # Görseller ve favicon
 └── pages/
-    ├── rooms.html            # Odalar — sekmeli oda detayları
-    ├── amenities.html        # Olanaklar + SSS accordion
-    ├── contact.html          # İletişim, rezervasyon formu (validasyonlu), harita
-    ├── login.html            # Giriş Yap / Kayıt Ol
-    └── admin.html            # Admin paneli — rezervasyon yönetimi
+    ├── rooms.html           # Sekmeli oda detayları
+    ├── catalog.html         # Dinamik katalog + yorum sistemi
+    ├── amenities.html       # Olanaklar + SSS accordion
+    ├── contact.html         # Rezervasyon formu + harita
+    ├── favorites.html       # Kullanıcıya özel favoriler
+    ├── login.html           # Giriş / Kayıt
+    └── admin.html           # Admin paneli
 ```
 
 ---
@@ -48,11 +62,14 @@ velora/
 
 | Teknoloji | Kullanım Amacı |
 |-----------|----------------|
-| HTML5 | Sayfa yapısı ve semantic markup |
+| HTML5 | Sayfa yapısı, semantic markup |
 | CSS3 | Responsive layout, dark/light mode, animasyonlar |
-| JavaScript (Vanilla) | Tüm etkileşimler, auth sistemi, form validasyonu |
-| localStorage | Tema, dil, oturum ve rezervasyon verisi saklama |
-| Google Fonts | Cormorant Garamond + Jost font ailesi |
+| JavaScript (Vanilla) | UI etkileşimleri, form validasyonu, dinamik içerik |
+| PHP 8 | REST API uç noktaları, oturum yönetimi |
+| MySQL | Kullanıcılar, rezervasyonlar, yorumlar |
+| PDO | Güvenli veritabanı sorguları |
+| localStorage | Tema, dil, favori tercihleri |
+| Google Fonts | Cormorant Garamond + Jost |
 | Google Maps Embed | Konum haritası |
 
 ---
@@ -61,81 +78,117 @@ velora/
 
 | Sayfa | Açıklama |
 |-------|----------|
-| `index.html` | Ana sayfa — hero, hakkında, oda önizleme, slider, sayaç |
-| `rooms.html` | Sekmeli oda tipleri — Queen Suite, Twin, Deluxe + ortak alanlar |
-| `amenities.html` | Otel olanakları, tesis politikaları, SSS accordion |
-| `contact.html` | Validasyonlu rezervasyon formu, iletişim bilgileri, harita |
-| `login.html` | Giriş Yap / Kayıt Ol sekmeleri |
-| `admin.html` | Rezervasyon yönetim paneli (admin girişi gerektirir) |
+| `index.html` | Ana sayfa — hero, slider, istatistik, oda önizleme |
+| `rooms.html` | Sekmeli oda tipleri — Queen Suite, Twin, Deluxe |
+| `catalog.html` | JSON'dan dinamik kartlar, filtreleme, sıralama, yorum sistemi |
+| `amenities.html` | Otel olanakları, politikalar, SSS accordion |
+| `contact.html` | Validasyonlu rezervasyon formu, iletişim, harita |
+| `favorites.html` | Kullanıcıya özel favori odalar |
+| `login.html` | Giriş / Kayıt sekmeleri |
+| `admin.html` | Rezervasyon yönetimi (sadece admin) |
+
+---
+
+## 🗄️ Veritabanı Tabloları
+
+| Tablo | İçerik |
+|-------|--------|
+| `users` | id, name, email, password (hash), role, created_at |
+| `reservations` | id, name, email, phone, room, checkin, checkout, message, status, created_at |
+| `comments` | id, user_id, user_name, room_id, room_name, rating, comment, created_at |
+
+---
+
+## 🚀 Kurulum (XAMPP / Localhost)
+
+```bash
+# 1. Projeyi klonla
+git clone https://github.com/331s/velora-suit-hotel.git
+
+# 2. htdocs klasörüne taşı
+# C:\xampp\htdocs\velora\
+
+# 3. XAMPP'te Apache + MySQL başlat
+
+# 4. Tarayıcıda setup.php'yi çalıştır
+http://localhost/velora/setup.php
+
+# 5. Kurulum tamamlandıktan sonra setup.php'yi sil
+
+# 6. Siteye git
+http://localhost/velora/
+```
+
+> Farklı bir MySQL şifresi kullanıyorsan `api/config.php` dosyasındaki `DB_PASS` değerini güncelle.
 
 ---
 
 ## 🔐 Auth Sistemi
 
-- Kullanıcılar kayıt olup giriş yapabilir
-- Admin hesabı varsayılan olarak oluşturulur (bilgiler gizlidir)
-- Oturum bilgisi localStorage'da saklanır
-- Admin paneline giriş yapmadan erişim engellenir, login sayfasına yönlendirilir
-- Admin butonu her sayfanın footer'ında yer alır
+- PHP session tabanlı kimlik doğrulama
+- Şifreler `password_hash()` ile bcrypt olarak saklanıyor
+- Admin paneline yetkisiz erişim engelleniyor
+- `🔐 Admin` footer linki yalnızca admin hesabında görünüyor
+- Navbar'da kullanıcı adına tıklayınca dropdown menü açılıyor
 
 ---
 
-## 🛡️ Admin Paneli Özellikleri
+## 🛡️ Admin Paneli
 
-- Toplam / Bekliyor / Onaylandı / İptal istatistik kartları
-- Ad, e-posta, oda adına göre anlık arama
+- İstatistik kartları: Toplam / Bekliyor / Onaylandı / İptal
+- Ad, e-posta ve oda tipine göre arama
 - Durum ve oda tipine göre filtreleme
-- Her rezervasyonu Bekliyor / Onaylandı / İptal olarak güncelleme
-- İsme tıklayınca detay modalı açılıyor
-- Tekil veya toplu rezervasyon silme
-- Yeni rezervasyonlar varsayılan olarak **Bekliyor** statüsünde gelir
+- Rezervasyon durumunu güncelleme (Bekliyor / Onaylandı / İptal)
+- Rezervasyon detay modalı
+- Tekil ve toplu silme
+- Yorumları silme yetkisi
 
 ---
 
 ## 📋 Ödev Gereksinimleri
 
-**Hafta 1 — Temel Yapı:**
+**Hafta 1 — Temel Yapı**
 - [x] Birden fazla HTML sayfası
-- [x] Meta query kullanımı
+- [x] Meta viewport, description, keywords
 - [x] Responsive / mobil uyumlu tasarım
-- [x] Mobilde hamburger menü
-- [x] Görseller taşmıyor (`max-width: 100%`, `object-fit: cover`)
+- [x] Hamburger menü
+- [x] Görseller taşmıyor
 
-**Hafta 2 — JavaScript Etkileşimleri:**
+**Hafta 2 — JavaScript Etkileşimleri**
 - [x] Açılır/kapanır mobil menü
 - [x] Dark / Light mode
-- [x] Otomatik görsel slider
-- [x] Sekmeli içerik (Tabs)
-- [x] Modal pencere (Lightbox)
+- [x] Slider
+- [x] Sekmeli içerik
+- [x] Modal (Lightbox)
 - [x] Yukarı çık butonu
-- [x] Sayaç / istatistik animasyonu
+- [x] Sayaç animasyonu
 - [x] SSS Accordion
 
-**Hafta 3 — Form & Validasyon:**
+**Hafta 3 — Form & Validasyon**
 - [x] Rezervasyon formu
-- [x] `required` özelliği ile zorunlu alan kontrolü
+- [x] `required` ile zorunlu alan kontrolü
 - [x] E-posta format kontrolü (regex)
-- [x] Tarih mantığı (çıkış > giriş)
-- [x] Anlık hata mesajları (blur eventi)
+- [x] Tarih mantığı kontrolü
+- [x] Anlık hata mesajları
 - [x] Başarılı gönderim mesajı
 - [x] Karakter sayacı
 
-**Hafta 4 — Auth & Admin:**
-- [x] Giriş / Kayıt sistemi
-- [x] Admin paneli
-- [x] Rezervasyonlar admin'e düşüyor
+**Hafta 4 — Veri & localStorage**
+- [x] JSON'dan dinamik kart listeleme
+- [x] Kategori filtreleme ve fiyat sıralaması
+- [x] Favorilere ekle — localStorage ile kullanıcı bazında saklama
 
----
-
-## 🚀 Kurulum
-
-Herhangi bir kurulum gerektirmez. Projeyi klonlayıp `index.html` dosyasını tarayıcıda açman yeterli.
-
-```bash
-git clone https://github.com/kullanici-adin/velora-suit-hotel.git
-cd velora-suit-hotel
-# index.html dosyasını tarayıcıda aç
-```
+**Hafta 5 — Veritabanı & Profesyonelleştirme**
+- [x] Kullanıcı kayıt olma (PHP + MySQL)
+- [x] Kullanıcı giriş yapma (PHP + MySQL)
+- [x] Rezervasyon ekleme (veritabanına veri ekleme)
+- [x] Rezervasyon listeleme (veritabanından okuma)
+- [x] Durum güncelleme ve silme
+- [x] Yorum ekleme ve silme
+- [x] Favicon
+- [x] Sayfa başlıkları
+- [x] README.md
+- [x] Kırık link yok
 
 ---
 
