@@ -2,6 +2,7 @@
 <html lang="tr">
 <head>
   <meta charset="UTF-8">
+  <link rel="icon" type="image/svg+xml" href="../assets/img/favicon.svg">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Velora Suit Hotel — Giriş Yap / Kayıt Ol">
   <meta name="theme-color" content="#0d0c0b">
@@ -159,7 +160,9 @@
   <a href="../index.html" class="navbar__brand">VELORA <span>SUIT</span> HOTEL</a>
   <ul class="navbar__nav">
     <li><a href="../index.html">Ana Sayfa</a></li>
-    <li><a href="rooms.html">Odalar</a></li>
+    <li><a href="catalog.html" data-tr="Katalog" data-en="Catalog">Katalog</a></li>
+    <li><a href="catalog.html">Katalog</a></li>
+  <li><a href="rooms.html">Odalar</a></li>
     <li><a href="amenities.html">Olanaklar</a></li>
     <li><a href="contact.html">İletişim</a></li>
   </ul>
@@ -172,6 +175,8 @@
 
 <ul class="mobile-nav" role="list">
   <li><a href="../index.html">Ana Sayfa</a></li>
+  <li><a href="catalog.html" data-tr="Katalog" data-en="Catalog">Katalog</a></li>
+    <li><a href="catalog.html">Katalog</a></li>
   <li><a href="rooms.html">Odalar</a></li>
   <li><a href="amenities.html">Olanaklar</a></li>
   <li><a href="contact.html">İletişim</a></li>
@@ -295,12 +300,16 @@
   </div>
 </div>
 
+<script src="../assets/js/api.js"></script>
 <script src="../assets/js/main.js"></script>
 <script>
-  // Zaten giriş yaptıysa yönlendir
-  if (getSession()) {
-    window.location.href = isAdmin() ? 'admin.html' : '../index.html';
-  }
+  // PHP API oturumu varsa yönlendir
+  (async function() {
+    const res = await Auth.check().catch(() => null);
+    if (res && res.ok && res.data) {
+      window.location.href = res.data.role === 'admin' ? 'admin.html' : '../index.html';
+    }
+  })();
 
   function switchTab(tab) {
     document.getElementById('tabLogin').classList.toggle('active', tab === 'login');
@@ -325,43 +334,44 @@
     return valid;
   }
 
-  // Giriş formu
-  document.getElementById('loginForm').addEventListener('submit', function(e) {
+  // ── Giriş Formu ────────────────────────────
+  document.getElementById('loginForm').addEventListener('submit', async function(e) {
     e.preventDefault();
     const email = document.getElementById('loginEmail');
     const pass  = document.getElementById('loginPass');
+    const btn   = this.querySelector('button[type="submit"]');
 
     const emailOk = validateInput(email, 'loginEmailErr', v => /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v));
     const passOk  = validateInput(pass,  'loginPassErr',  v => v.length >= 6);
     if (!emailOk || !passOk) return;
 
-    const users = JSON.parse(localStorage.getItem(USERS_KEY) || '[]');
-    const user  = users.find(u => u.email === email.value && u.password === pass.value);
+    btn.textContent = 'Giriş yapılıyor...';
+    btn.disabled = true;
 
-    if (!user) {
-      showMsg('loginMsg', currentLang === 'tr'
-        ? '✗ E-posta veya şifre hatalı.'
-        : '✗ Incorrect email or password.', 'error');
+    const res = await Auth.login(email.value, pass.value);
+
+    btn.textContent = 'Giriş Yap';
+    btn.disabled = false;
+
+    if (!res.ok) {
+      showMsg('loginMsg', '✗ ' + res.msg, 'error');
       return;
     }
 
-    setSession({ id: user.id, name: user.name, email: user.email, role: user.role });
-    showMsg('loginMsg', currentLang === 'tr'
-      ? '✓ Giriş başarılı, yönlendiriliyorsunuz...'
-      : '✓ Login successful, redirecting...', 'success');
-
+    showMsg('loginMsg', '✓ Giriş başarılı, yönlendiriliyorsunuz...', 'success');
     setTimeout(() => {
-      window.location.href = user.role === 'admin' ? 'admin.html' : '../index.html';
-    }, 900);
+      window.location.href = res.data.role === 'admin' ? 'admin.html' : '../index.html';
+    }, 800);
   });
 
-  // Kayıt formu
-  document.getElementById('registerForm').addEventListener('submit', function(e) {
+  // ── Kayıt Formu ────────────────────────────
+  document.getElementById('registerForm').addEventListener('submit', async function(e) {
     e.preventDefault();
     const name  = document.getElementById('regName');
     const email = document.getElementById('regEmail');
     const pass  = document.getElementById('regPass');
     const pass2 = document.getElementById('regPass2');
+    const btn   = this.querySelector('button[type="submit"]');
 
     const ok1 = validateInput(name,  'regNameErr',  v => v.trim().length >= 3);
     const ok2 = validateInput(email, 'regEmailErr', v => /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v));
@@ -369,28 +379,20 @@
     const ok4 = validateInput(pass2, 'regPass2Err', v => v === pass.value);
     if (!ok1 || !ok2 || !ok3 || !ok4) return;
 
-    const users = JSON.parse(localStorage.getItem(USERS_KEY) || '[]');
-    if (users.find(u => u.email === email.value)) {
-      showMsg('registerMsg', currentLang === 'tr'
-        ? '✗ Bu e-posta adresi zaten kayıtlı.'
-        : '✗ This email is already registered.', 'error');
+    btn.textContent = 'Kaydediliyor...';
+    btn.disabled = true;
+
+    const res = await Auth.register(name.value.trim(), email.value, pass.value);
+
+    btn.textContent = 'Kayıt Ol';
+    btn.disabled = false;
+
+    if (!res.ok) {
+      showMsg('registerMsg', '✗ ' + res.msg, 'error');
       return;
     }
 
-    users.push({
-      id: 'u' + Date.now(),
-      name: name.value.trim(),
-      email: email.value,
-      password: pass.value,
-      role: 'user',
-      createdAt: new Date().toISOString()
-    });
-    localStorage.setItem(USERS_KEY, JSON.stringify(users));
-
-    showMsg('registerMsg', currentLang === 'tr'
-      ? '✓ Kayıt başarılı! Giriş yapabilirsiniz.'
-      : '✓ Registration successful! You can now log in.', 'success');
-
+    showMsg('registerMsg', '✓ ' + res.msg, 'success');
     setTimeout(() => switchTab('login'), 1500);
     this.reset();
     this.querySelectorAll('input').forEach(i => i.classList.remove('error','success'));

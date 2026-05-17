@@ -415,25 +415,6 @@ function setSession(u) { localStorage.setItem(AUTH_KEY, JSON.stringify(u)); }
 function clearSession(){ localStorage.removeItem(AUTH_KEY); }
 function isAdmin()     { const s = getSession(); return s && s.role === 'admin'; }
 
-// Navbar'a oturum butonu ekle
-(function renderAuthBtn() {
-  const nav = document.querySelector('.navbar__nav');
-  if (!nav) return;
-  const session = getSession();
-  const li = document.createElement('li');
-  if (session) {
-    li.innerHTML = `<a href="#" id="logoutNavBtn" title="${session.name}">👤 Çıkış</a>`;
-    li.querySelector('#logoutNavBtn').addEventListener('click', e => {
-      e.preventDefault();
-      clearSession();
-      window.location.href = getBasePath() + 'pages/login.html';
-    });
-  } else {
-    li.innerHTML = `<a href="${getBasePath()}pages/login.html" data-tr="Giriş Yap" data-en="Login">Giriş Yap</a>`;
-  }
-  nav.appendChild(li);
-})();
-
 function getBasePath() {
   const path = window.location.pathname;
   return path.includes('/pages/') ? '../' : '';

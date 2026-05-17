@@ -2,6 +2,7 @@
 <html lang="tr">
 <head>
   <meta charset="UTF-8">
+  <link rel="icon" type="image/svg+xml" href="../assets/img/favicon.svg">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Velora Suit Hotel iletişim ve konum — 15 Temmuz Mah. Şifa Cad. No:9, Nevşehir, Türkiye 50100.">
   <meta name="keywords" content="velora suit hotel iletişim, nevşehir otel adres, velora konum, contact">
@@ -93,7 +94,9 @@
   <a href="../index.html" class="navbar__brand">VELORA <span>SUIT</span> HOTEL</a>
   <ul class="navbar__nav">
     <li><a href="../index.html" data-tr="Ana Sayfa" data-en="Home">Ana Sayfa</a></li>
-    <li><a href="rooms.html" data-tr="Odalar" data-en="Rooms">Odalar</a></li>
+    <li><a href="catalog.html" data-tr="Katalog" data-en="Catalog">Katalog</a></li>
+    <li><a href="catalog.html">Katalog</a></li>
+  <li><a href="rooms.html" data-tr="Odalar" data-en="Rooms">Odalar</a></li>
     <li><a href="amenities.html" data-tr="Olanaklar" data-en="Amenities">Olanaklar</a></li>
     <li><a href="contact.html" class="active" data-tr="İletişim" data-en="Contact">İletişim</a></li>
   </ul>
@@ -106,6 +109,8 @@
 
 <ul class="mobile-nav" role="list">
   <li><a href="../index.html" data-tr="Ana Sayfa" data-en="Home">Ana Sayfa</a></li>
+  <li><a href="catalog.html" data-tr="Katalog" data-en="Catalog">Katalog</a></li>
+    <li><a href="catalog.html">Katalog</a></li>
   <li><a href="rooms.html" data-tr="Odalar" data-en="Rooms">Odalar</a></li>
   <li><a href="amenities.html" data-tr="Olanaklar" data-en="Amenities">Olanaklar</a></li>
   <li><a href="contact.html" data-tr="İletişim" data-en="Contact">İletişim</a></li>
@@ -329,7 +334,9 @@
     <p class="footer__copy" data-tr="© 2025 Velora Suit Hotel. Tüm hakları saklıdır." data-en="© 2025 Velora Suit Hotel. All rights reserved.">© 2025 Velora Suit Hotel. Tüm hakları saklıdır.</p>
     <ul class="footer__links">
       <li><a href="../index.html" data-tr="Ana Sayfa" data-en="Home">Ana Sayfa</a></li>
-      <li><a href="rooms.html" data-tr="Odalar" data-en="Rooms">Odalar</a></li>
+      <li><a href="catalog.html" data-tr="Katalog" data-en="Catalog">Katalog</a></li>
+    <li><a href="catalog.html">Katalog</a></li>
+  <li><a href="rooms.html" data-tr="Odalar" data-en="Rooms">Odalar</a></li>
       <li><a href="amenities.html" data-tr="Olanaklar" data-en="Amenities">Olanaklar</a></li>
       <li><a href="contact.html" data-tr="İletişim" data-en="Contact">İletişim</a></li>
       <li><a href="login.html" class="admin-footer-btn" data-tr="🔐 Admin" data-en="🔐 Admin">🔐 Admin</a></li>
@@ -337,6 +344,7 @@
   </div>
 </footer>
 
+<script src="../assets/js/api.js"></script>
 <script src="../assets/js/main.js"></script>
 <script>
 (function () {
@@ -447,7 +455,7 @@
   });
 
   // Form gönderim
-  form.addEventListener('submit', function (e) {
+  form.addEventListener('submit', async function (e) {
     e.preventDefault();
 
     const checks = [
@@ -485,40 +493,43 @@
       return;
     }
 
-    // Başarı
+    // Başarı — PHP API'ye gönder
     submitBtn.classList.add('btn-loading');
     const origText = submitBtn.getAttribute('data-' + currentLang);
     submitBtn.textContent = currentLang === 'tr' ? 'Gönderiliyor...' : 'Sending...';
 
-    setTimeout(() => {
-      // Rezervasyonu localStorage'a kaydet
-      if (typeof saveReservation === 'function') {
-        saveReservation({
-          name:     document.getElementById('name').value,
-          email:    document.getElementById('email').value,
-          phone:    document.getElementById('phone').value,
-          room:     document.getElementById('room').value,
-          checkin:  document.getElementById('checkin').value,
-          checkout: document.getElementById('checkout').value,
-          message:  document.getElementById('message').value,
-        });
-      }
+    const res = await Reservations.add({
+      name:     document.getElementById('name').value,
+      email:    document.getElementById('email').value,
+      phone:    document.getElementById('phone').value,
+      room:     document.getElementById('room').value,
+      checkin:  document.getElementById('checkin').value,
+      checkout: document.getElementById('checkout').value,
+      message:  document.getElementById('message').value,
+    });
 
-      submitBtn.classList.remove('btn-loading');
-      submitBtn.textContent = origText;
-      success.textContent = success.getAttribute('data-' + currentLang);
-      success.style.display = 'block';
-      success.scrollIntoView({ behavior:'smooth', block:'center' });
+    submitBtn.classList.remove('btn-loading');
+    submitBtn.textContent = origText;
 
-      form.reset();
-      charCount.textContent = '0 / 500';
-      form.querySelectorAll('input, select, textarea').forEach(el =>
-        el.classList.remove('error', 'success'));
-      form.querySelectorAll('.field-error').forEach(el =>
-        el.classList.remove('visible'));
+    if (!res.ok) {
+      errBanner.textContent = '⚠ ' + res.msg;
+      errBanner.style.display = 'block';
+      return;
+    }
+
+    success.textContent = success.getAttribute('data-' + currentLang);
+    success.style.display = 'block';
+    success.scrollIntoView({ behavior:'smooth', block:'center' });
+
+    form.reset();
+    charCount.textContent = '0 / 500';
+    form.querySelectorAll('input, select, textarea').forEach(el =>
+      el.classList.remove('error', 'success'));
+    form.querySelectorAll('.field-error').forEach(el =>
+      el.classList.remove('visible'));
 
       setTimeout(() => success.style.display = 'none', 6000);
-    }, 900);
+
   });
 })();
 </script>
