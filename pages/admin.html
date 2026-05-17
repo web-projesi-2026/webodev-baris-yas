@@ -2,6 +2,7 @@
 <html lang="tr">
 <head>
   <meta charset="UTF-8">
+  <link rel="icon" type="image/svg+xml" href="../assets/img/favicon.svg">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#0d0c0b">
   <title>Admin Paneli — Velora Suit Hotel</title>
@@ -326,6 +327,7 @@
   <a href="../index.html" class="navbar__brand">VELORA <span>SUIT</span> HOTEL</a>
   <ul class="navbar__nav">
     <li><a href="../index.html">Ana Sayfa</a></li>
+    <li><a href="catalog.html">Katalog</a></li>
     <li><a href="contact.html">İletişim</a></li>
   </ul>
   <button class="lang-btn" onclick="toggleLang()">EN</button>
@@ -426,76 +428,46 @@
   </main>
 </div>
 
+<script src="../assets/js/api.js"></script>
 <script src="../assets/js/main.js"></script>
 <script>
-  // Admin koruması
-  if (!isAdmin()) {
-    window.location.href = 'login.html';
-  }
-
-  // Karşılama
-  const session = getSession();
-  if (session) {
-    document.getElementById('welcomeText').textContent =
-      'Hoş geldiniz, ' + session.name + ' 👋';
-  }
+  // Admin koruması — PHP session'dan kontrol
+  (async function() {
+    const res = await Auth.check().catch(() => null);
+    if (!res || !res.ok || res.data?.role !== 'admin') {
+      window.location.href = 'login.html';
+    } else {
+      document.getElementById('welcomeText').textContent =
+        'Hoş geldiniz, ' + res.data.name + ' 👋';
+    }
+  })();
 
   function adminLogout() {
-    clearSession();
-    window.location.href = 'login.html';
+    Auth.logout().then(() => { window.location.href = 'login.html'; });
   }
 
-  // Test verisi ekle (eğer boşsa)
-  function seedData() {
-    const list = JSON.parse(localStorage.getItem(RES_KEY) || '[]');
-    if (list.length === 0) {
-      const samples = [
-        { name:'Ahmet Yılmaz', email:'ahmet@email.com', phone:'+90 532 111 22 33', room:'queen',  checkin:'2025-05-10', checkout:'2025-05-14', message:'Balkon tercih ederim.', status:'Bekliyor', date:'26.04.2025 10:12', id:'R001' },
-        { name:'Elif Kaya',    email:'elif@email.com',  phone:'+90 541 222 33 44', room:'twin',   checkin:'2025-05-15', checkout:'2025-05-17', message:'',                   status:'Bekliyor', date:'26.04.2025 11:30', id:'R002' },
-        { name:'Mehmet Demir', email:'mehmet@test.com', phone:'',                  room:'deluxe', checkin:'2025-06-01', checkout:'2025-06-05', message:'Geç check-in.',       status:'Bekliyor', date:'26.04.2025 13:45', id:'R003' },
-        { name:'Selin Arslan', email:'selin@mail.com',  phone:'+90 555 444 55 66', room:'queen',  checkin:'2025-05-20', checkout:'2025-05-22', message:'',                   status:'Bekliyor', date:'25.04.2025 09:00', id:'R004' },
-      ];
-      localStorage.setItem(RES_KEY, JSON.stringify(samples));
-    }
-  }
-  seedData();
-
-  // Stat kartlarını güncelle
-  function renderStats() {
-    const list = JSON.parse(localStorage.getItem(RES_KEY) || '[]');
+  // ── Stat kartlarını güncelle ───────────────
+  function renderStats(list) {
     const wait    = list.filter(r => r.status === 'Bekliyor').length;
     const confirm = list.filter(r => r.status === 'Onaylandı').length;
     const cancel  = list.filter(r => r.status === 'İptal').length;
 
     document.getElementById('statCards').innerHTML = `
-      <div class="stat-card">
-        <div class="stat-card__label">Toplam</div>
-        <div class="stat-card__value gold">${list.length}</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-card__label">Bekliyor</div>
-        <div class="stat-card__value orange">${wait}</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-card__label">Onaylandı</div>
-        <div class="stat-card__value green">${confirm}</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-card__label">İptal</div>
-        <div class="stat-card__value red">${cancel}</div>
-      </div>
-    `;
+      <div class="stat-card"><div class="stat-card__label">Toplam</div><div class="stat-card__value gold">${list.length}</div></div>
+      <div class="stat-card"><div class="stat-card__label">Bekliyor</div><div class="stat-card__value orange">${wait}</div></div>
+      <div class="stat-card"><div class="stat-card__label">Onaylandı</div><div class="stat-card__value green">${confirm}</div></div>
+      <div class="stat-card"><div class="stat-card__label">İptal</div><div class="stat-card__value red">${cancel}</div></div>`;
   }
 
-  // Tablo render
+  // ── Tablo render ───────────────────────────
+  let ALL_RESERVATIONS = [];
+
   function renderTable() {
-    const list    = JSON.parse(localStorage.getItem(RES_KEY) || '[]');
+    const list    = ALL_RESERVATIONS;
     const search  = document.getElementById('searchBox').value.toLowerCase();
     const status  = document.getElementById('statusFilter').value;
     const room    = document.getElementById('roomFilter').value;
-
     const roomLabel = { queen:'Queen Suite', twin:'Twin Oda', deluxe:'Deluxe Double' };
-    const badgeClass = { 'Bekliyor':'badge-wait', 'Onaylandı':'badge-confirm', 'İptal':'badge-cancel' };
 
     const filtered = list.filter(r => {
       const matchSearch = !search || [r.name, r.email, r.room, r.phone].join(' ').toLowerCase().includes(search);
@@ -507,100 +479,83 @@
     const tbody = document.getElementById('tableBody');
 
     if (filtered.length === 0) {
-      tbody.innerHTML = `<tr><td colspan="10">
-        <div class="empty-state">
-          <div class="icon">📭</div>
-          <p>Gösterilecek rezervasyon bulunamadı.</p>
-        </div>
-      </td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="10"><div class="empty-state"><div class="icon">📭</div><p>Rezervasyon bulunamadı.</p></div></td></tr>`;
       return;
     }
 
-    tbody.innerHTML = filtered.map((r, i) => `
+    tbody.innerHTML = filtered.map(r => `
       <tr>
-        <td style="color:var(--clr-muted);font-size:.75rem;">${r.id || '#'}</td>
-        <td>
-          <button onclick="showDetail('${r.id}')"
-            style="background:none;border:none;color:var(--clr-cream);cursor:pointer;font-size:.83rem;text-align:left;padding:0;text-decoration:underline;text-underline-offset:3px;">
-            ${r.name}
-          </button>
-        </td>
+        <td style="color:var(--clr-muted);font-size:.75rem;">#${r.id}</td>
+        <td><button onclick="showDetail(${r.id})" style="background:none;border:none;color:var(--clr-cream);cursor:pointer;font-size:.83rem;text-decoration:underline;text-underline-offset:3px;">${r.name}</button></td>
         <td style="color:var(--clr-muted);">${r.email}</td>
         <td style="color:var(--clr-muted);">${r.phone || '—'}</td>
         <td>${roomLabel[r.room] || r.room || '—'}</td>
         <td style="color:var(--clr-muted);white-space:nowrap;">${r.checkin || '—'}</td>
         <td style="color:var(--clr-muted);white-space:nowrap;">${r.checkout || '—'}</td>
         <td>
-          <select class="status-select" onchange="updateStatus('${r.id}', this.value)">
+          <select class="status-select" onchange="updateStatus(${r.id}, this.value)">
             <option value="Bekliyor"  ${r.status==='Bekliyor'  ? 'selected':''}>⏳ Bekliyor</option>
             <option value="Onaylandı" ${r.status==='Onaylandı' ? 'selected':''}>✅ Onaylandı</option>
             <option value="İptal"     ${r.status==='İptal'     ? 'selected':''}>❌ İptal</option>
           </select>
         </td>
-        <td style="color:var(--clr-muted);font-size:.75rem;white-space:nowrap;">${r.date || '—'}</td>
-        <td>
-          <button class="btn-delete" onclick="deleteRes('${r.id}')">Sil</button>
-        </td>
-      </tr>
-    `).join('');
+        <td style="color:var(--clr-muted);font-size:.75rem;white-space:nowrap;">${r.created_at ? r.created_at.substring(0,16).replace('T',' ') : '—'}</td>
+        <td><button class="btn-delete" onclick="deleteRes(${r.id})">Sil</button></td>
+      </tr>`).join('');
 
-    renderStats();
+    renderStats(list);
   }
 
-  function updateStatus(id, newStatus) {
-    const list = JSON.parse(localStorage.getItem(RES_KEY) || '[]');
-    const idx  = list.findIndex(r => r.id === id);
-    if (idx > -1) {
-      list[idx].status = newStatus;
-      localStorage.setItem(RES_KEY, JSON.stringify(list));
-      showToast('Durum güncellendi: ' + newStatus);
-      renderStats();
+  async function updateStatus(id, status) {
+    const res = await Reservations.update(id, status);
+    if (res.ok) {
+      const r = ALL_RESERVATIONS.find(r => r.id == id);
+      if (r) r.status = status;
+      renderStats(ALL_RESERVATIONS);
+      showToast('Durum güncellendi: ' + status);
+    } else {
+      showToast('Hata: ' + res.msg);
     }
   }
 
-  function deleteRes(id) {
+  async function deleteRes(id) {
     if (!confirm('Bu rezervasyonu silmek istediğinize emin misiniz?')) return;
-    let list = JSON.parse(localStorage.getItem(RES_KEY) || '[]');
-    list = list.filter(r => r.id !== id);
-    localStorage.setItem(RES_KEY, JSON.stringify(list));
-    showToast('Rezervasyon silindi.');
-    renderTable();
+    const res = await Reservations.remove(id);
+    if (res.ok) {
+      ALL_RESERVATIONS = ALL_RESERVATIONS.filter(r => r.id != id);
+      renderTable();
+      showToast('Rezervasyon silindi.');
+    }
   }
 
-  function clearAllReservations() {
+  async function clearAllReservations() {
     if (!confirm('TÜM rezervasyonları silmek istediğinize emin misiniz?')) return;
-    localStorage.removeItem(RES_KEY);
+    for (const r of ALL_RESERVATIONS) { await Reservations.remove(r.id); }
+    ALL_RESERVATIONS = [];
     renderTable();
     showToast('Tüm rezervasyonlar silindi.');
   }
 
   function showDetail(id) {
-    const list = JSON.parse(localStorage.getItem(RES_KEY) || '[]');
-    const r = list.find(r => r.id === id);
+    const r = ALL_RESERVATIONS.find(r => r.id == id);
     if (!r) return;
     const roomLabel = { queen:'Queen Suite', twin:'Twin Oda', deluxe:'Deluxe Double' };
     document.getElementById('detailContent').innerHTML = `
-      <div class="detail-row"><strong>ID</strong><span>${r.id}</span></div>
+      <div class="detail-row"><strong>ID</strong><span>#${r.id}</span></div>
       <div class="detail-row"><strong>Ad Soyad</strong><span>${r.name}</span></div>
       <div class="detail-row"><strong>E-posta</strong><span>${r.email}</span></div>
       <div class="detail-row"><strong>Telefon</strong><span>${r.phone || '—'}</span></div>
-      <div class="detail-row"><strong>Oda Tipi</strong><span>${roomLabel[r.room] || r.room}</span></div>
-      <div class="detail-row"><strong>Giriş Tarihi</strong><span>${r.checkin || '—'}</span></div>
-      <div class="detail-row"><strong>Çıkış Tarihi</strong><span>${r.checkout || '—'}</span></div>
+      <div class="detail-row"><strong>Oda</strong><span>${roomLabel[r.room] || r.room}</span></div>
+      <div class="detail-row"><strong>Giriş</strong><span>${r.checkin}</span></div>
+      <div class="detail-row"><strong>Çıkış</strong><span>${r.checkout}</span></div>
       <div class="detail-row"><strong>Durum</strong><span>${r.status}</span></div>
-      <div class="detail-row"><strong>Gönderim Tarihi</strong><span>${r.date || '—'}</span></div>
-      <div class="detail-row"><strong>Mesaj</strong><span>${r.message || '—'}</span></div>
-    `;
+      <div class="detail-row"><strong>Tarih</strong><span>${(r.created_at||'').substring(0,16)}</span></div>
+      <div class="detail-row"><strong>Mesaj</strong><span>${r.message || '—'}</span></div>`;
     document.getElementById('detailModal').classList.add('open');
   }
 
-  function closeDetail() {
-    document.getElementById('detailModal').classList.remove('open');
-  }
-
-  document.getElementById('detailModal').addEventListener('click', function(e) {
-    if (e.target === this) closeDetail();
-  });
+  function closeDetail() { document.getElementById('detailModal').classList.remove('open'); }
+  document.getElementById('detailModal').addEventListener('click', function(e) { if (e.target===this) closeDetail(); });
 
   function showToast(msg) {
     const t = document.getElementById('toast');
@@ -609,9 +564,17 @@
     setTimeout(() => t.classList.remove('show'), 2800);
   }
 
-  // İlk render
-  renderTable();
-  renderStats();
+  document.getElementById('searchBox').addEventListener('input', renderTable);
+  document.getElementById('statusFilter').addEventListener('change', renderTable);
+  document.getElementById('roomFilter').addEventListener('change', renderTable);
+
+  // ── İlk yükleme ────────────────────────────
+  async function init() {
+    const res = await Reservations.list();
+    if (res.ok) { ALL_RESERVATIONS = res.data; }
+    renderTable();
+  }
+  init();
 </script>
 </body>
 </html>
